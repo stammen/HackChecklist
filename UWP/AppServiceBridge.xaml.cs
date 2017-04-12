@@ -50,19 +50,24 @@ namespace SDKTemplate
             }
         }
 
-
         private async void RunChecksClicked(object sender, RoutedEventArgs e)
         {
             await LaunchBackgroundProcess();
-            RunChecksResponseText.Text = "running";
-
-            ValueSet valueSet = new ValueSet();
-            valueSet.Add("runChecks", "hello");
-
             if (App.Connection != null)
             {
+                RunChecksResponseText.Text = "running";
+                ValueSet valueSet = new ValueSet();
+                valueSet.Add("runChecks", true);
+
                 AppServiceResponse response = await App.Connection.SendMessageAsync(valueSet);
-                RunChecksResponseText.Text = (bool)response.Message["response"] ? "Developer Mode is Enabled" : "Developer Mode is Disabled";
+                RunChecksResponseText.Text = (bool)response.Message["DeveloperMode"] ? "Developer Mode is Enabled" : "Developer Mode is Disabled";
+                RunChecksResponseText.Text += "\n";
+                RunChecksResponseText.Text += (bool)response.Message["VS2017"] ? "Visual Studio 2017 is installed" : "Visual Studio 2017 is not installed";
+
+                // need to terminate the BackGround process!
+                valueSet = new ValueSet();
+                valueSet.Add("terminate",true);
+                response = await App.Connection.SendMessageAsync(valueSet);
             }
         }
     }
