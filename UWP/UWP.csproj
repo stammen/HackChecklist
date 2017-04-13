@@ -20,7 +20,7 @@
     <PackageCertificateThumbprint>D7167F207D00389555F8478C837EA5D47AE8D996</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -111,15 +111,13 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\microsoft-sdk.png" />
-    <Content Include="Assets\smalltile-sdk.png" />
-    <Content Include="Assets\splash-sdk.png" />
-    <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\squaretile-sdk.png" />
-    <Content Include="Assets\storelogo-sdk.png" />
-    <Content Include="Assets\tile-sdk.png" />
-    <Content Include="Assets\windows-sdk.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -142,7 +140,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y /s "$(SolutionDir)BackgroundProcess\bin\$(Platform)\$(ConfigurationName)\BackgroundProcess.exe" "$(SolutionDir)\UWP\bin\$(Platform)\$(ConfigurationName)\AppX\"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y /s "$(SolutionDir)BackgroundFormProcess\bin\$(Platform)\$(ConfigurationName)\BackgroundFormProcess.exe" "$(SolutionDir)\UWP\bin\$(Platform)\$(ConfigurationName)\AppX\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
