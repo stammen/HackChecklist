@@ -128,6 +128,7 @@
     <Error Condition="!Exists('..\packages\UwpDesktop.10.0.14393.3\build\portable-net45+uap\UwpDesktop.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\UwpDesktop.10.0.14393.3\build\portable-net45+uap\UwpDesktop.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y /s "$(SolutionDir)BackgroundFormProcess\bin\$(Platform)\$(ConfigurationName)\BackgroundFormProcess.exe" "$(SolutionDir)UWP\bin\$(Platform)\$(ConfigurationName)\AppX\"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
