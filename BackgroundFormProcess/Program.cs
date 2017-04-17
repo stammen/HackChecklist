@@ -112,6 +112,12 @@ namespace BackgroundFormProcess
                 {
                     return true;
                 }
+
+                value = localKey.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock").GetValue("AllowDevelopmentWithoutDevLicense").ToString();
+                if (value == "1")
+                {
+                    return true;
+                }
             }
             catch
             {
