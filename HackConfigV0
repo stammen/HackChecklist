@@ -1,0 +1,34 @@
+
+"tests" : 
+
+[
+
+  {
+
+    "test" : "developerMode",
+
+    "required" : true
+
+  },
+
+  {
+
+    "test" : "visualStudio",
+
+    "required" : true,
+
+    "minVersion" : <num>
+
+  },
+
+  {
+
+    "test" : "UWPSdk",
+
+    "required" : "true",
+
+    "minVersion" : 15063
+
+  }
+
+]
