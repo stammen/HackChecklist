@@ -139,9 +139,20 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy /y /s "$(SolutionDir)BackgroundFormProcess\bin\$(Platform)\$(ConfigurationName)\BackgroundFormProcess.exe" "$(SolutionDir)\UWP\bin\$(Platform)\$(ConfigurationName)\AppX"</PostBuildEvent>
-  </PropertyGroup>
+  <ItemGroup Label="BackgroundProcess">
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'" 
+      Include="..\BackgroundFormProcess\bin\x86\Debug\BackgroundFormProcess.exe">
+      <Link>BackgroundFormProcess/BackgroundFormProcess.exe</Link>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Release|x86'"
+      Include="..\BackgroundFormProcess\bin\x86\Release\BackgroundFormProcess.exe">
+      <Link>BackgroundFormProcess/BackgroundFormProcess.exe</Link>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
