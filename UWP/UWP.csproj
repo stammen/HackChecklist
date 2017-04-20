@@ -152,6 +152,18 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'"
+      Include="..\BackgroundFormProcess\bin\x64\Debug\BackgroundFormProcess.exe">
+      <Link>BackgroundFormProcess/BackgroundFormProcess.exe</Link>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Release|x64'"
+      Include="..\BackgroundFormProcess\bin\x64\Release\BackgroundFormProcess.exe">
+      <Link>BackgroundFormProcess/BackgroundFormProcess.exe</Link>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
