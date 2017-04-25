@@ -1,12 +1,13 @@
-﻿namespace Microsoft.HackChecklist.BackgroundProcess
+﻿using System;
+
+namespace Microsoft.HackChecklist.BackgroundProcess
 {
     public class Program
     {
-        private const int MinimunParametersNumber = 2;
-
-        public static void Main(string[] args)
+        public static void Main()
         {
             new SystemChecker().Run();
+            Console.ReadKey();
         }
     }
 }

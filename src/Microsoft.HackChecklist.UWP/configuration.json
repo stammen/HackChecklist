@@ -1,0 +1,94 @@
+﻿{
+  "requirements": [
+    {
+      "name": "Microsoft Windows 10",
+      "additionalInformation": "Software more info",
+      "installationRegistryKey": "Software Installation Registry Key",
+      "installationRegistryValue": "Software Installation Registry Value",
+      "isOptional": "false",
+      "installationNotes": "Software Installation Notes"
+    },
+    {
+      "name": "Visual Studio 2017 Community (min)",
+      "additionalInformation": "Software more info",
+      "installationRegistryKey": "Software Installation Registry Key",
+      "installationRegistryValue": "Software Installation Registry Value",
+      "isOptional": "false",
+      "installationNotes": "Software Installation Notes",
+      "modules": [
+        {
+          "name": "UWP SDK (RS2)",
+          "additionalInformation": "Software more info",
+          "installationRegistryKey": "Software Installation Registry Key",
+          "installationRegistryValue": "Software Installation Registry Value",
+          "isOptional": "false",
+          "installationNotes": "Software Installation Notes"
+        },
+        {
+          "name": ".NET desktop development",
+          "additionalInformation": "Software more info",
+          "installationRegistryKey": "Software Installation Registry Key",
+          "installationRegistryValue": "Software Installation Registry Value",
+          "isOptional": "false",
+          "installationNotes": "Software Installation Notes"
+        },
+        {
+          "name": "Xamarin with Android SDK, Java, and Google Android Emulator",
+          "additionalInformation": "Software more info",
+          "installationRegistryKey": "Software Installation Registry Key",
+          "installationRegistryValue": "Software Installation Registry Value",
+          "isOptional": "false",
+          "installationNotes": "Software Installation Notes"
+        },
+        {
+          "name": "C++ Desktop development",
+          "additionalInformation": "Software more info",
+          "installationRegistryKey": "Software Installation Registry Key",
+          "installationRegistryValue": "Software Installation Registry Value",
+          "isOptional": "true",
+          "installationNotes": "Software Installation Notes"
+        }
+      ]
+    },    
+    {
+      "name": "Developer Mode Enabled",
+      "additionalInformation": "Software more info",
+      "installationRegistryKey": "Software Installation Registry Key",
+      "installationRegistryValue": "Software Installation Registry Value",
+      "isOptional": "false",
+      "installationNotes": "Software Installation Notes"
+    },
+    {
+      "name": "Unity (min 5.6)",
+      "additionalInformation": "Software more info",
+      "installationRegistryKey": "Software Installation Registry Key",
+      "installationRegistryValue": "Software Installation Registry Value",
+      "isOptional": "true",
+      "installationNotes": "Software Installation Notes"
+    },
+    {
+      "name": "Azure SDK (latest)",
+      "additionalInformation": "Software more info",
+      "installationRegistryKey": "Software Installation Registry Key",
+      "installationRegistryValue": "Software Installation Registry Value",
+      "isOptional": "false",
+      "installationNotes": "Software Installation Notes"
+    },
+    {
+      "name": "Azure extension for VS",
+      "additionalInformation": "Software more info",
+      "installationRegistryKey": "Software Installation Registry Key",
+      "installationRegistryValue": "Software Installation Registry Value",
+      "isOptional": "false",
+      "installationNotes": "Software Installation Notes"
+    },
+    {
+      "name": "Azure CLI (2.0 cross plat)",
+      "additionalInformation": "Software more info",
+      "installationRegistryKey": "Software Installation Registry Key",
+      "installationRegistryValue": "Software Installation Registry Value",
+      "isOptional": "false",
+      "installationNotes": "Software Installation Notes"
+    }
+  ]  
+}

@@ -1,5 +1,5 @@
 ﻿using Windows.UI.Xaml.Controls;
-using Microsoft.HackChecklist.UWP.Contracts;
+using Microsoft.HackChecklist.UWP.ViewModels;
 
 namespace Microsoft.HackChecklist.UWP.View
 {
@@ -8,8 +8,7 @@ namespace Microsoft.HackChecklist.UWP.View
         public MainView()
         {
             InitializeComponent();
-            IoCConfiguration.Init();
-            DataContext = IoCConfiguration.GetType<IMainViewModel>();
+            DataContext = new MainViewModel();
         }
     }
 }

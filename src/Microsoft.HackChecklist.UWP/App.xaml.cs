@@ -10,7 +10,6 @@ namespace Microsoft.HackChecklist.UWP
 {
     sealed partial class App : Application
     {
-        private const string AutofacConfigurationFile = "autofac.json";
         public static AppServiceConnection Connection;
         BackgroundTaskDeferral _appServiceDeferral;
 
