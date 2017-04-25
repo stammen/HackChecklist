@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-
-namespace Microsoft.HackChecklist.Models
+﻿namespace Microsoft.HackChecklist.Models
 {
     public class Software 
     {
