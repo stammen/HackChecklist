@@ -6,41 +6,29 @@
          xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
          xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
          IgnorableNamespaces="uap mp rescap desktop">
-
-  <Identity
-    Name="cd98c9ad-a1c0-4701-bd36-389182991968"
-    Publisher="CN=kreyes"
-    Version="1.0.0.0" />
-
-  <mp:PhoneIdentity PhoneProductId="cd98c9ad-a1c0-4701-bd36-389182991968"
+  <Identity Name="Microsoft.AppServiceBridge" Publisher="CN=stamm" Version="1.0.9.0" />
+  <mp:PhoneIdentity PhoneProductId="1aa93327-07b6-485f-bc70-70cbd5a9ca0a"
                     PhonePublisherId="00000000-0000-0000-0000-000000000000" />
-
   <Properties>
-    <DisplayName>Microsoft.HackChecklist.UWP</DisplayName>
-    <PublisherDisplayName>kreyes</PublisherDisplayName>
+    <DisplayName>Hack Checklist</DisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14332.0" MaxVersionTested="10.0.14332.0" />
   </Dependencies>
-
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-                 Executable="$targetnametoken$.exe"
-                 EntryPoint="Microsoft.HackChecklist.UWP.App">
-      <uap:VisualElements
-        DisplayName="Microsoft.HackChecklist.UWP"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Microsoft.HackChecklist.UWP"
-        BackgroundColor="#00b2f0">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="UWP.App">
+      <uap:VisualElements DisplayName="Hack Checklist" Square150x150Logo="Assets\Square150x150Logo.png"
+                          Square44x44Logo="Assets\Square44x44Logo.png"
+                          Description="This app checks if all the required software for the HackFest is installed on your computer."
+                          BackgroundColor="#00b2f0">
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+        </uap:DefaultTile>
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.appService">
@@ -50,7 +38,6 @@
       </Extensions>
     </Application>
   </Applications>
-
   <Capabilities>
     <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
