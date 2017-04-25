@@ -24,7 +24,7 @@
         <uap:Extension Category="windows.appService">
           <uap:AppService Name="CommunicationService" />
         </uap:Extension>
-        <desktop:Extension Category="windows.fullTrustProcess" Executable="BackgroundFormProcess\BackgroundFormProcess.exe" />
+        <desktop:Extension Category="windows.fullTrustProcess" Executable="BackgroundFormProcess\BackgroundProcess.exe" />
       </Extensions>
     </Application>
   </Applications>
