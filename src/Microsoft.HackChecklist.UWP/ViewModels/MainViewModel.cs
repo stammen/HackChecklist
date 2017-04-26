@@ -60,6 +60,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             var configuration = serializer.Deserialize<Configuration>(strConfiguration);
             Configuration = configuration;
             CheckRegistry();
+            DoSendRequest();
         }
 
         public void CheckRegistry()
@@ -74,37 +75,17 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             if (App.Connection == null) return;
 
             Message = "running";
-            var valueSet = new ValueSet { { "runChecks", true } };
 
-            var response = await App.Connection.SendMessageAsync(valueSet);
-
-            // TODO: WIP pending of integration of layout.
-            Message = "\n";
-            Message += (bool)response.Message["DeveloperMode"]
-                ? "Developer Mode is Enabled"
-                : "Developer Mode is Disabled";
-            Message += "\n";
-            Message += "Windows Version Build" + (string)response.Message["WindowsVersion"];
-            Message += "\n";
-            Message += (bool)response.Message["VS2017"]
-                ? "Visual Studio 2017 is installed"
-                : "Visual Studio 2017 is not installed";
-            Message += "\n";
-            Message += (bool)response.Message["SDK UWP"]
-                ? "Microsoft Universal SDK is installed"
-                : "Microsoft Universal SDK is not installed";
-            Message += "\n";
-            Message += (bool)response.Message[".NET Desktop Develpoment"]
-                ? ".NET desktop development is installed"
-                : ".NET desktop development is not installed";
-            Message += "\n";
-            Message += (bool)response.Message["Xamarin with Android SDK"]
-                ? "Xamarin with Android SDK, Java, and Google Android Emulator is installed"
-                : "Xamarin with Android SDK, Java, and Google Android Emulator is not installed";
-            Message += "\n";
-            Message += (bool)response.Message["Azure Cli"]
-                ? "Azure Cli is installed"
-                : "Azure Cli is not installed";
+            ValueSet valueSet;
+            foreach (var requirement in Requirements)
+            {
+                valueSet = new ValueSet { { "runChecks", requirement } };
+                var response = await App.Connection.SendMessageAsync(valueSet);
+                if (response?.Message.Keys.Contains(requirement.Name) ?? false)
+                {
+                    // TODO: WIP Update the list of requirements with the results of the check.                    
+                }
+            }
 
             // need to terminate the BackGround process!
             valueSet = new ValueSet { { "terminate", true } };

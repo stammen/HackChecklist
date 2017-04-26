@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Win32;
 
-namespace Microsoft.HackChecklist.BackgroundProcess
+namespace Microsoft.HackChecklist.SystemChecker
 {
     public static class RegistryChecker
     {

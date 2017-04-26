@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.HackChecklist.BackgroundProcess
+namespace Microsoft.HackChecklist.SystemChecker
 {
     public static class StringExtensions
     {

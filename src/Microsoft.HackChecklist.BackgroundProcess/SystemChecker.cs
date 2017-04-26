@@ -1,14 +1,18 @@
-﻿using System;
+﻿using Microsoft.HackChecklist.Models;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 
-namespace Microsoft.HackChecklist.BackgroundProcess
+namespace Microsoft.HackChecklist.SystemChecker
 {
     public class SystemChecker
     {
+        private const string UninstallRegistrySubKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+        private const string UninstallRegistryKeyValue = "DisplayName";
+
         private readonly AppServiceConnection _connection;        
 
         public SystemChecker()
@@ -19,9 +23,9 @@ namespace Microsoft.HackChecklist.BackgroundProcess
             _connection.RequestReceived += Connection_RequestReceived;
         }
 
-        public void Run()
+        public void Run(string command, string parameter)
         {
-            var appServiceThread = new Thread(ThreadProc);
+            var appServiceThread = new Thread(new ThreadStart(ThreadProc));
             appServiceThread.Start();
         }
 
@@ -51,31 +55,21 @@ namespace Microsoft.HackChecklist.BackgroundProcess
         private void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
             var key = args.Request.Message.First().Key;
-            var value = args.Request.Message.First().Value.ToString();
+            var value = args.Request.Message.First().Value;
             Debug.WriteLine($"Received message '{key}' with value '{value}'");
 
             if (key == "request")
             {
                 var valueSet = new ValueSet();
-                valueSet.Add("response", value.ToUpper());
-                Debug.WriteLine($"Sending response: '{value.ToUpper()}'");
+                valueSet.Add("response", value.ToString().ToUpper());
+                Debug.WriteLine($"Sending response: '{value.ToString().ToUpper()}'");
                 args.Request.SendResponseAsync(valueSet).Completed += delegate { };
             }
             else if (key == "runChecks")
             {
-                // TODO: WIP Hardcoded string will be received as parameters.
-                var visualStudioChecker = new VisualStudioChecker();                
-                var installedPrograms = RegistryChecker.GetLocalRegistryValues(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", "DisplayName");
-
                 var valueSet = new ValueSet();
-                valueSet.Add("DeveloperMode", RegistryChecker.GetLocalRegistryValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock", "AllowAllTrustedApps") == "1");
-                valueSet.Add("WindowsVersion", RegistryChecker.GetLocalRegistryValue(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "CurrentBuildNumber"));
-                valueSet.Add("VS2017", visualStudioChecker.IsVisualStudio2017Installed());
-                valueSet.Add("SDK UWP", visualStudioChecker.IsWorkloadInstalled("Microsoft.VisualStudio.Workload.Universal"));
-                valueSet.Add(".NET Desktop Develpoment", visualStudioChecker.IsWorkloadInstalled("Microsoft.VisualStudio.Workload.ManagedDesktop"));
-                valueSet.Add("Xamarin with Android SDK", visualStudioChecker.IsWorkloadInstalled("Microsoft.VisualStudio.Workload.NetCrossPlat"));
-                valueSet.Add("Azure Cli", installedPrograms?.Any(installedProgram => installedProgram.Contains("Azure Cli", StringComparison.InvariantCultureIgnoreCase)) ?? false);
-
+                var software = (Software)value;
+                if (software != null) valueSet.Add(software.Name, CheckRequirement(software));
                 args.Request.SendResponseAsync(valueSet).Completed += delegate { };
             }
             else if (key == "terminate")
@@ -86,6 +80,38 @@ namespace Microsoft.HackChecklist.BackgroundProcess
                 args.Request.SendResponseAsync(valueSet).Completed += delegate {
                 };
             }
+        }
+
+        private bool CheckRequirement(Software software)
+        {
+            var checkResult = false;
+            switch (software.CheckType)
+            {
+                case CheckType.RegistryValueCheck:
+                    checkResult = string.Compare(
+                        RegistryChecker.GetLocalRegistryValue(software.InstallationRegistryKey, software.InstallationRegistryValue),
+                        software.InstallationRegistryExpectedValue) == 0;
+                    break;
+                case CheckType.IncludedInRegistryInstallationCheck:
+                    var installedSoftware = RegistryChecker.GetLocalRegistryValues(UninstallRegistrySubKey, UninstallRegistryKeyValue);
+                    checkResult = installedSoftware?.Any(program =>
+                        program.Contains(software.InstallationRegistryKey, StringComparison.InvariantCultureIgnoreCase)) ?? false;
+                    break;
+                case CheckType.VisualStudioInstalledCheck:
+                    checkResult = new VisualStudioChecker().IsVisualStudio2017Installed();
+                    break;
+                case CheckType.VisualStudioWorkloadInstalledCheck:
+                    var visualStudioChecker = new VisualStudioChecker();
+                    checkResult = new VisualStudioChecker().IsWorkloadInstalled(software.InstallationRegistryKey);
+                    break;
+                case CheckType.MinimumRegistryValueCheck:
+                    checkResult = string.Compare(
+                        RegistryChecker.GetLocalRegistryValue(software.InstallationRegistryKey, software.InstallationRegistryValue),
+                        software.InstallationRegistryExpectedValue) >= 0;
+                    break;
+            }
+
+            return checkResult;
         }
     }
 }
