@@ -107,7 +107,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CheckType.cs" />
+    <Compile Include="Consts\BackgroundProcessCommand.cs" />
+    <Compile Include="Enums\CheckType.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Requirement.cs" />

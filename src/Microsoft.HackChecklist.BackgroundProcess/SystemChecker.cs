@@ -6,6 +6,9 @@ using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 using Microsoft.HackChecklist.BackgroundProcess.Extensions;
 using Microsoft.HackChecklist.Models;
+using Microsoft.HackChecklist.Models.Consts;
+using Microsoft.HackChecklist.Models.Enums;
+using Microsoft.HackChecklist.Services;
 
 namespace Microsoft.HackChecklist.BackgroundProcess
 {
@@ -21,17 +24,18 @@ namespace Microsoft.HackChecklist.BackgroundProcess
             _connection = new AppServiceConnection();
             _connection.AppServiceName = "CommunicationService";
             _connection.PackageFamilyName = Windows.ApplicationModel.Package.Current.Id.FamilyName;
-            _connection.RequestReceived += Connection_RequestReceived;
+            _connection.RequestReceived += ConnectionRequestReceived;
         }
 
-        public void Run(string command, string parameter)
+        public void Run()
         {
-            var appServiceThread = new Thread(new ThreadStart(ThreadProc));
+            var appServiceThread = new Thread(ConnectionThread);
             appServiceThread.Start();
         }
 
-        private async void ThreadProc()
+        private async void ConnectionThread()
         {
+            Console.WriteLine("I am listening");
             var status = await _connection.OpenAsync();
             switch (status)
             {
@@ -48,36 +52,36 @@ namespace Microsoft.HackChecklist.BackgroundProcess
                     Debug.WriteLine($"The app AppServicesProvider is installed but it does not provide the app service {_connection.AppServiceName}.");
                     return;
                 case AppServiceConnectionStatus.Unknown:
-                    Debug.WriteLine(string.Format("An unkown error occurred while we were trying to open an AppServiceConnection."));
+                    Debug.WriteLine("An unkown error occurred while we were trying to open an AppServiceConnection.");
                     return;
             }
         }
 
-        private void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        private void ConnectionRequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
             var key = args.Request.Message.First().Key;
-            var value = args.Request.Message.First().Value;
-            Debug.WriteLine($"Received message '{key}' with value '{value}'");
+            var value = new JsonSerializerService().Deserialize<Requirement>(args.Request.Message.First().Value.ToString());
+            Console.WriteLine($"Received message '{key}' with value '{value}'");
 
-            if (key == "request")
+            if (key == BackgroundProcessCommand.Request)
             {
                 var valueSet = new ValueSet();
                 valueSet.Add("response", value.ToString().ToUpper());
                 Debug.WriteLine($"Sending response: '{value.ToString().ToUpper()}'");
                 args.Request.SendResponseAsync(valueSet).Completed += delegate { };
             }
-            else if (key == "runChecks")
+            else if (key == BackgroundProcessCommand.RunChecks)
             {
                 var valueSet = new ValueSet();
                 var software = (Software)value;
                 if (software != null) valueSet.Add(software.Name, CheckRequirement(software));
                 args.Request.SendResponseAsync(valueSet).Completed += delegate { };
             }
-            else if (key == "terminate")
+            else if (key == BackgroundProcessCommand.RunChecks)
             {
                 var valueSet = new ValueSet();
                 valueSet.Add("response", true);
-                Debug.WriteLine($"Sending terminate response: '{"true"}'");
+                Debug.WriteLine("Sending terminate response: \'true\'");
                 args.Request.SendResponseAsync(valueSet).Completed += delegate {
                 };
             }
@@ -102,7 +106,6 @@ namespace Microsoft.HackChecklist.BackgroundProcess
                     checkResult = new VisualStudioChecker().IsVisualStudio2017Installed();
                     break;
                 case CheckType.VisualStudioWorkloadInstalledCheck:
-                    var visualStudioChecker = new VisualStudioChecker();
                     checkResult = new VisualStudioChecker().IsWorkloadInstalled(software.InstallationRegistryKey);
                     break;
                 case CheckType.MinimumRegistryValueCheck:

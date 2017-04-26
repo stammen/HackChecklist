@@ -8,7 +8,8 @@ namespace Microsoft.HackChecklist.UWP.View
         public MainView()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
+            IoCConfiguration.Configure();
+            DataContext = IoCConfiguration.GetType<MainViewModel>();
         }
     }
 }

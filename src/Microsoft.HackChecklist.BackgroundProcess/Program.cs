@@ -8,7 +8,7 @@ namespace Microsoft.HackChecklist.BackgroundProcess
 
         public static void Main(string[] args)
         {
-            new SystemChecker().Run(args[0], args[1]);
+            new SystemChecker().Run();
             Console.ReadKey();
         }
     }

@@ -24,7 +24,7 @@ namespace Microsoft.HackChecklist.BackgroundProcess
 
             try
             {                
-                return localKey?.OpenSubKey(subKey).GetValue(valueKey).ToString() ?? null;
+                return localKey?.OpenSubKey(subKey)?.GetValue(valueKey).ToString();
             }
             catch
             {
@@ -51,13 +51,12 @@ namespace Microsoft.HackChecklist.BackgroundProcess
 
             try
             {
-                string value;
                 var key = localKey.OpenSubKey(subKey);
                 if (key != null)
                 {
-                    foreach (RegistryKey subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
+                    foreach (var subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
                     {
-                        value = subkey.GetValue(valueKey) as string;
+                        var value = subkey.GetValue(valueKey) as string;
                         if (value != null)
                         {
                             searchResult.Add(value);

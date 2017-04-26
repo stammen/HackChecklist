@@ -11,7 +11,7 @@
             <TextBlock x:Uid="Welcome" Style="{StaticResource TitleTextBlockStyle}"/>
             <TextBlock x:Uid="ToolHelp" Style="{StaticResource SubTitleTextBlockStyle}"/>
             <Button x:Uid="CheckNow" Style="{StaticResource CheckRegistryButtonStyle}" 
-                    Command="{Binding CheckNowCommand}"/>
+                    Command="{Binding CheckRequirementsCommand}"/>
             <TextBlock x:Uid="Terms" Style="{StaticResource TermsTextBlockStyle}"/>
         </StackPanel>
         <Image Source="ms-appx:///Assets/Buildings.png" VerticalAlignment="Bottom" Width="960" Stretch="Uniform"/>
@@ -33,7 +33,8 @@
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>
-            <Button Grid.RowSpan="2" x:Uid="Restart" Style="{StaticResource RestartButtonStyle}"/>
+            <Button Grid.Row="0" Grid.RowSpan="2" x:Uid="Restart" Style="{StaticResource RestartButtonStyle}"
+                    Command="{Binding CheckRequirementsCommand}"/>
         </Grid>
     </Grid>
 </Page>
