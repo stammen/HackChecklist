@@ -16,6 +16,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
 
         public const string ConfigurationFileName = "configuration";
         private string _message;
+        private bool _goChecking = false;
         private AppDataService _appDataService = new AppDataService();
         private List<Requirement> _requirements = new List<Requirement>();
 
@@ -26,7 +27,6 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
 
         public ICommand SendRequest => new RelayCommand(DoSendRequest);
         public ICommand CheckNowCommand => new RelayCommand(CheckRegistry);
-
         public Configuration Configuration { get; set; }
 
         public List<Requirement> Requirements
@@ -38,6 +38,16 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             set
             {
                 _requirements = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool GoChecking
+        {
+            get { return _goChecking; }
+            set
+            {
+                _goChecking = value;
                 OnPropertyChanged();
             }
         }
@@ -59,12 +69,12 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             var serializer = new JsonSerializerService();
             var configuration = serializer.Deserialize<Configuration>(strConfiguration);
             Configuration = configuration;
-            CheckRegistry();
             DoSendRequest();
         }
 
         public void CheckRegistry()
         {
+            GoChecking = true;
             Requirements = Configuration.Requirements.ToList();
         }
 

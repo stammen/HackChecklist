@@ -4,29 +4,48 @@
 
     <Style x:Key="TitleTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="Light"/>
-        <Setter Property="FontSize" Value="52"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeMoreLarge}"/>
         <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}"/>
     </Style>
 
     <Style x:Key="SubTitleTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="Light"/>
-        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSemiLarge}"/>
         <Setter Property="Foreground" Value="Gray"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
-    <Style x:Key="TitlePleaseWaitStyle" TargetType="TextBlock">
+    <Style x:Key="TitleLoadingStyle" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="Light"/>
-        <Setter Property="FontSize" Value="20"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeLarge}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,30"/>
-        <Setter Property="Height" Value="30"/>
         <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}"/>
     </Style>
 
     <Style x:Key="TermsTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource SubTitleTextBlockStyle}">
-        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeExtraSmall}"/>
+    </Style>
+
+    <Style x:Key="TitleCheckingTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeExtraSmall}"/>
+        <Setter Property="Padding" Value="22,0,10,0"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+    </Style>
+
+    <Style x:Key="SubTitleCheckingTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleCheckingTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeExtraMicro}"/>
+        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="FontWeight" Value="Light"/>
+    </Style>
+
+    <Style x:Key="SubTitleOptionalCheckingTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleCheckingTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeMicro}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5,0"/>
     </Style>
 
     <Style x:Key="CheckRegistryButtonStyle" TargetType="Button">
@@ -41,7 +60,7 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="FontWeight" Value="Normal"/>
-        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeMedium}"/>
         <Setter Property="UseSystemFocusVisuals" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -102,22 +121,47 @@
     </Style>
 
     <Style x:Key="RestartButtonStyle" TargetType="Button" BasedOn="{StaticResource CheckRegistryButtonStyle}">
-        <Setter Property="Margin" Value="0,0,20,0"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Margin" Value="0,0,0,40"/>
+        <Setter Property="Width" Value="160"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSmall}"/>
     </Style>
 
     <Style x:Key="StopButtonStyle" TargetType="Button" BasedOn="{StaticResource CheckRegistryButtonStyle}">
         <Setter Property="Margin" Value="20,0,0,0"/>
     </Style>
 
+    <Style x:Key="CheckingBorderStyle" TargetType="Border">
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="0,0,0,0.5"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+
     <DataTemplate x:Key="Software">
         <Grid>
-            <Border VerticalAlignment="Top" Height="30" BorderBrush="Black" BorderThickness="0,0,0,0.5" Width="700">
-                <TextBlock Text="{Binding Name}" Foreground="Black" FontSize="12" Padding="50,0" VerticalAlignment="Center"/>
-            </Border>
-            <ListView Margin="0,20,0,0" ItemsSource="{Binding Modules}" ItemTemplate="{StaticResource Modules}">
+            <Grid VerticalAlignment="Top" Height="38" Width="650">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}" Style="{StaticResource TitleCheckingTextBlockStyle}"/>
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding IsOptional, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Image Source="ms-appx:///Assets/Optional.png" Width="7"/>
+                        <TextBlock  Text="Optional" Style="{StaticResource SubTitleOptionalCheckingTextBlockStyle}"/>
+                    </StackPanel>
+                </StackPanel>
+                <TextBlock Grid.Row="1" Text="{Binding InstallationRegistryValue}" Style="{StaticResource SubTitleCheckingTextBlockStyle}"/>
+                <Image Grid.RowSpan="2" Source="ms-appx:///Assets/O.png" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="8"/>
+                <Border Grid.RowSpan="2" Style="{StaticResource CheckingBorderStyle}"/>
+            </Grid>
+            <ListView ItemsSource="{Binding Modules}" ItemTemplate="{StaticResource Modules}" ItemContainerStyle="{StaticResource ListViewItemStyle}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center"/>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0,45,0,0"/>
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>
@@ -125,11 +169,32 @@
     </DataTemplate>
 
     <DataTemplate x:Key="Modules">
-        <Grid>
-            <Border VerticalAlignment="Top" Height="30" BorderBrush="Black" BorderThickness="0,0,0,0.5" Width="700">
-                <TextBlock Text="{Binding Name}" Foreground="Black" FontSize="12" Padding="120,0" VerticalAlignment="Center"/>
-            </Border>
+        <Grid VerticalAlignment="Top" Height="38" Width="605" Margin="45,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" Style="{StaticResource TitleCheckingTextBlockStyle}"/>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsOptional, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,4,0,0">
+                    <Image Source="ms-appx:///Assets/Optional.png" Width="7"/>
+                    <TextBlock  Text="Optional" Style="{StaticResource SubTitleOptionalCheckingTextBlockStyle}"/>
+                </StackPanel>
+            </StackPanel>
+            <TextBlock Grid.Row="1" Text="{Binding InstallationRegistryValue}" Style="{StaticResource SubTitleCheckingTextBlockStyle}"/>
+            <Image Grid.RowSpan="2" Source="ms-appx:///Assets/O.png" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="8"/>
+            <Border Grid.RowSpan="2" Style="{StaticResource CheckingBorderStyle}"/>
         </Grid>
     </DataTemplate>
+
+    <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <ContentPresenter/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>

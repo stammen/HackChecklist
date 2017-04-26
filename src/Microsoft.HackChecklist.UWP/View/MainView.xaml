@@ -4,31 +4,36 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Height="800" Width="1200">
+    mc:Ignorable="d" MaxHeight="670" MaxWidth="960">
 
-    <Grid HorizontalAlignment="Center">
-        <StackPanel x:Name="WelcomeView" Visibility="Collapsed" Margin="0,200,0,0" Width="350" VerticalAlignment="Top">
+    <Grid Height="670" Width="960">
+        <StackPanel Margin="300,160,0,0" Width="350" VerticalAlignment="Top" HorizontalAlignment="Left">
             <TextBlock x:Uid="Welcome" Style="{StaticResource TitleTextBlockStyle}"/>
             <TextBlock x:Uid="ToolHelp" Style="{StaticResource SubTitleTextBlockStyle}"/>
             <Button x:Uid="CheckNow" Style="{StaticResource CheckRegistryButtonStyle}" 
                     Command="{Binding CheckNowCommand}"/>
             <TextBlock x:Uid="Terms" Style="{StaticResource TermsTextBlockStyle}"/>
         </StackPanel>
+        <Image Source="ms-appx:///Assets/Buildings.png" VerticalAlignment="Bottom" Width="960" Stretch="Uniform"/>
+        <Image Source="ms-appx:///Assets/clouds.png" VerticalAlignment="Top" Width="960" Stretch="Uniform"/>
 
-        <Grid x:Name="HackCheck" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Height="800" Width="1200">
-            <ListView Margin="0,80" ItemsSource="{Binding Requirements}" ItemTemplate="{StaticResource Software}">
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="670" Width="960" Background="White"
+            Visibility="{Binding GoChecking,Converter={StaticResource BoolToVisibilityConverter}}" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" x:Uid="TitleLoading" Style="{StaticResource TitleLoadingStyle}"/>
+            <ListView Grid.Row="1" ItemTemplate="{StaticResource Software}" ItemContainerStyle="{StaticResource ListViewItemStyle}"
+                      ItemsSource="{Binding Requirements}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical" HorizontalAlignment="Center"/>
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="100">
-                <Button x:Uid="Restart" Style="{StaticResource RestartButtonStyle}"/>
-                <Button x:Uid="Stop" Style="{StaticResource StopButtonStyle}"/>
-            </StackPanel>
-            <TextBlock x:Uid="PleaseWait" Style="{StaticResource TitlePleaseWaitStyle}"/>
+            <Button Grid.RowSpan="2" x:Uid="Restart" Style="{StaticResource RestartButtonStyle}"/>
         </Grid>
     </Grid>
 </Page>
