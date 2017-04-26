@@ -10,7 +10,13 @@ This GIT repository works with GIT LFS
 
 https://git-lfs.github.com/
 
-We are using Windows Desktop extensions that are in the SDK windows 10
+You need to fetch the assets with:
+```
+git lfs fetch <repository>  
+git lfs pull <repository>
+```
+
+We are using Windows Desktop extensions also that are in the SDK windows 10
 
 https://developer.microsoft.com/es-es/windows/downloads/windows-10-sdk
 

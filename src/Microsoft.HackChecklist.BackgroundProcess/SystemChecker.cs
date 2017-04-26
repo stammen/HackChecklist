@@ -1,12 +1,13 @@
-﻿using Microsoft.HackChecklist.Models;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
+using Microsoft.HackChecklist.BackgroundProcess.Extensions;
+using Microsoft.HackChecklist.Models;
 
-namespace Microsoft.HackChecklist.SystemChecker
+namespace Microsoft.HackChecklist.BackgroundProcess
 {
     public class SystemChecker
     {
@@ -88,7 +89,7 @@ namespace Microsoft.HackChecklist.SystemChecker
             switch (software.CheckType)
             {
                 case CheckType.RegistryValueCheck:
-                    checkResult = string.Compare(
+                    checkResult = string.CompareOrdinal(
                         RegistryChecker.GetLocalRegistryValue(software.InstallationRegistryKey, software.InstallationRegistryValue),
                         software.InstallationRegistryExpectedValue) == 0;
                     break;
@@ -105,7 +106,7 @@ namespace Microsoft.HackChecklist.SystemChecker
                     checkResult = new VisualStudioChecker().IsWorkloadInstalled(software.InstallationRegistryKey);
                     break;
                 case CheckType.MinimumRegistryValueCheck:
-                    checkResult = string.Compare(
+                    checkResult = string.CompareOrdinal(
                         RegistryChecker.GetLocalRegistryValue(software.InstallationRegistryKey, software.InstallationRegistryValue),
                         software.InstallationRegistryExpectedValue) >= 0;
                     break;
