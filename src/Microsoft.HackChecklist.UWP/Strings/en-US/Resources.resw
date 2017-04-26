@@ -120,9 +120,6 @@
   <data name="CheckNow.Content" xml:space="preserve">
     <value>Check now</value>
   </data>
-  <data name="PleaseWait.Text" xml:space="preserve">
-    <value>Checking softwares... please wait</value>
-  </data>
   <data name="Restart.Content" xml:space="preserve">
     <value>Restart checker</value>
   </data>
@@ -131,6 +128,9 @@
   </data>
   <data name="Terms.Text" xml:space="preserve">
     <value>Terms of use</value>
+  </data>
+  <data name="TitleLoading.Text" xml:space="preserve">
+    <value>Checking... please wait</value>
   </data>
   <data name="ToolHelp.Text" xml:space="preserve">
     <value>This tool wil help check and make sure you have all the latest softwares needed for the xxxx hackathon</value>
