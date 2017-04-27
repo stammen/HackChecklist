@@ -1,15 +1,17 @@
-﻿using Microsoft.HackChecklist.UWP.ViewModels.Base;
+﻿using GoogleAnalytics;
 using Microsoft.HackChecklist.Models;
-using System.Collections.Generic;
-using System.Windows.Input;
-using System.Threading.Tasks;
-using System;
-using System.Diagnostics;
-using Windows.Foundation.Collections;
-using System.Linq;
 using Microsoft.HackChecklist.Models.Consts;
 using Microsoft.HackChecklist.Services.Contracts;
 using Microsoft.HackChecklist.UWP.Contracts;
+using Microsoft.HackChecklist.UWP.Services;
+using Microsoft.HackChecklist.UWP.ViewModels.Base;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.Foundation.Collections;
 
 namespace Microsoft.HackChecklist.UWP.ViewModels
 {
@@ -19,15 +21,17 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
 
         private readonly IJsonSerializerService _jsonSerializerService;
         private readonly IAppDataService _appDataService;
+        private readonly IAnalyticsService _analyticsService;
 
         private string _message;
         private bool _isChecking;
         private List<Requirement> _requirements = new List<Requirement>();
 
-        public MainViewModel(IJsonSerializerService jsonSerializerService, IAppDataService appDataService)
+        public MainViewModel(IJsonSerializerService jsonSerializerService, IAppDataService appDataService, IAnalyticsService analyticsService)
         {
             _jsonSerializerService = jsonSerializerService;
             _appDataService = appDataService;
+            _analyticsService = analyticsService;
             Init();
         }
 
@@ -72,11 +76,16 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             var configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
             Configuration = configuration;
             Requirements = Configuration.Requirements.ToList();
-            CheckRequirementsAction();
+            _analyticsService.TrackScreen(AnalyticsConfiguration.MainViewScreenName);
         }
 
         private async void CheckRequirementsAction()
         {
+            _analyticsService.TrackEvent(
+                AnalyticsConfiguration.CheckCategory,
+                AnalyticsConfiguration.CheckAllRequirementsAction,
+                null,
+                0);
             IsChecking = true;
 
             await LaunchBackgroundProcess();
@@ -90,10 +99,16 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             {
                 valueSet = new ValueSet {{ BackgroundProcessCommand.RunChecks, _jsonSerializerService.Serialize(requirement) }};
                 var response = await App.Connection.SendMessageAsync(valueSet);
+                var passed = false;
                 if (response?.Message.Keys.Contains(requirement.Name) ?? false)
                 {
                     // TODO: WIP Update the list of requirements with the results of the check.                    
                 }
+                _analyticsService.TrackEvent(
+                    AnalyticsConfiguration.CheckCategory, 
+                    AnalyticsConfiguration.CheckRequirementAction, 
+                    requirement.Name, 
+                    passed ? 1 : 0);
             }
 
             // need to terminate the BackGround process!
@@ -103,7 +118,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
 
         private bool CheckRequirementsCan()
         {
-            return false;
+            return true;
         }
 
         private async Task LaunchBackgroundProcess()
@@ -117,6 +132,6 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             {
                 Debug.WriteLine(exception.Message);
             }
-        }
+        }       
     }
 }

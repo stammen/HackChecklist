@@ -16,6 +16,7 @@ namespace Microsoft.HackChecklist.UWP
             var builder = new ContainerBuilder();
             builder.RegisterType<JsonSerializerService>().As<IJsonSerializerService>().SingleInstance();
             builder.RegisterType<AppDataService>().As<IAppDataService>().SingleInstance();
+            builder.RegisterType<AnalyticsService>().As<IAnalyticsService>().SingleInstance();
 
             builder.RegisterType<MainViewModel>().SingleInstance();
 

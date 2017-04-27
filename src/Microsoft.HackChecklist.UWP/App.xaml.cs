@@ -1,15 +1,15 @@
 ﻿using System;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.AppService;
+using Windows.ApplicationModel.Background;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Windows.ApplicationModel.Background;
-using Windows.ApplicationModel.AppService;
 
 namespace Microsoft.HackChecklist.UWP
 {
     sealed partial class App : Application
-    {
+    {        
         public static AppServiceConnection Connection;
         BackgroundTaskDeferral _appServiceDeferral;
 
