@@ -1,5 +1,5 @@
-﻿using GoogleAnalytics;
-using Microsoft.HackChecklist.Models;
+﻿using Microsoft.HackChecklist.Models;
+using Windows.ApplicationModel;
 using Microsoft.HackChecklist.Models.Consts;
 using Microsoft.HackChecklist.Services.Contracts;
 using Microsoft.HackChecklist.UWP.Contracts;
@@ -97,7 +97,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             ValueSet valueSet;
             foreach (var requirement in Requirements)
             {
-                valueSet = new ValueSet {{ BackgroundProcessCommand.RunChecks, _jsonSerializerService.Serialize(requirement) }};
+                valueSet = new ValueSet { { BackgroundProcessCommand.RunChecks, _jsonSerializerService.Serialize(requirement) } };
                 var response = await App.Connection.SendMessageAsync(valueSet);
                 var passed = false;
                 if (response?.Message.Keys.Contains(requirement.Name) ?? false)
@@ -114,18 +114,19 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             // need to terminate the BackGround process!
             valueSet = new ValueSet { { BackgroundProcessCommand.Terminate, true } };
             await App.Connection.SendMessageAsync(valueSet);
+            IsChecking = false;
         }
 
         private bool CheckRequirementsCan()
         {
-            return true;
+            return !IsChecking;
         }
 
         private async Task LaunchBackgroundProcess()
         {
             try
             {
-                await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
                 await Task.Delay(1000); // quick fix, need to make it better
             }
             catch (Exception exception)
