@@ -95,8 +95,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Consts\ResponseStatus.cs" />
     <Compile Include="Contracts\IAnalyticsService.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\StatusImageConverter.cs" />
     <Compile Include="IoCConfiguration.cs" />
     <Compile Include="Services\AnalyticsConfiguration.cs" />
     <Compile Include="Services\AnalyticsService.cs" />
@@ -116,13 +118,13 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="Assets\Buildings.png" />
-    <Content Include="Assets\check.png" />
+    <Content Include="Assets\Success.png" />
     <Content Include="Assets\clouds.png" />
     <Content Include="Assets\HackCheckerIcon-21x15.png" />
     <Content Include="Assets\HackCheckerIcon_170x170.png" />
-    <Content Include="Assets\O.png" />
+    <Content Include="Assets\Processing.png" />
     <Content Include="Assets\Optional.png" />
-    <Content Include="Assets\X.png" />
+    <Content Include="Assets\Failed.png" />
     <Content Include="configuration.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

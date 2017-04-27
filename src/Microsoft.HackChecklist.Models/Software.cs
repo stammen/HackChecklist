@@ -21,5 +21,9 @@ namespace Microsoft.HackChecklist.Models
         public bool IsOptional { get; set; }
 
         public string InstallationNotes { get; set; }
+
+        public string Status { get; set; }
+
+        public bool ActivateLoading { get; set; }
     }            
 }

@@ -4,5 +4,6 @@
     xmlns:converters="using:Microsoft.HackChecklist.UWP.Converters">
 
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <converters:StatusImageConverter x:Key="StatusImageConverter"/>
 
 </ResourceDictionary>
