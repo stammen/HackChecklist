@@ -4,7 +4,11 @@
 
     <Color x:Key="PrimaryColor">#0078D7</Color>
     <Color x:Key="PrimaryLightColor">#7FBBEB</Color>
+    <Color x:Key="SecondaryColor">#000000</Color>
+    <Color x:Key="SecondaryLightColor">#737373</Color>
+    
     <SolidColorBrush x:Key="PrimaryColorBrush" Color="{StaticResource PrimaryColor}"/>
     <SolidColorBrush x:Key="PrimaryLightColorBrush" Color="{StaticResource PrimaryLightColor}"/>
-    
+    <SolidColorBrush x:Key="SecondaryColorBrush" Color="{StaticResource SecondaryColor}"/>
+    <SolidColorBrush x:Key="SecondaryLightColorBrush" Color="{StaticResource SecondaryColor}"/>
 </ResourceDictionary>

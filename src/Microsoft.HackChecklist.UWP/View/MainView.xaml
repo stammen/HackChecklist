@@ -24,7 +24,10 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" x:Uid="TitleLoading" Style="{StaticResource TitleLoadingStyle}"/>
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <TextBlock Text="{Binding MessageChecking}" Style="{StaticResource TitleLoadingStyle}"/>
+                <TextBlock Text="{Binding MessageChecked}" Style="{StaticResource SubTitleLoadingStyle}"/>
+            </StackPanel>
             <ListView Grid.Row="1" ItemTemplate="{StaticResource Software}" ItemContainerStyle="{StaticResource ListViewItemStyle}"
                       ItemsSource="{Binding Requirements}">
                 <ListView.ItemsPanel>
