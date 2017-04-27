@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using Microsoft.HackChecklist.Models.Enums;
 
 namespace Microsoft.HackChecklist.Models
 {

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Microsoft.HackChecklist.UWP.Contracts;
 
 namespace Microsoft.HackChecklist.UWP.Services
 {
-    public class AppDataService
+    public class AppDataService : IAppDataService
     {
         private const string RootPath = "ms-appx:///";
 

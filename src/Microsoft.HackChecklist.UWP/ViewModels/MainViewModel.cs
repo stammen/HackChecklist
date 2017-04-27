@@ -1,40 +1,43 @@
 ﻿using Microsoft.HackChecklist.UWP.ViewModels.Base;
 using Microsoft.HackChecklist.Models;
-using Microsoft.HackChecklist.Services;
 using System.Collections.Generic;
 using System.Windows.Input;
 using System.Threading.Tasks;
 using System;
+using System.Diagnostics;
 using Windows.Foundation.Collections;
-using Microsoft.HackChecklist.UWP.Services;
 using System.Linq;
+using Microsoft.HackChecklist.Models.Consts;
+using Microsoft.HackChecklist.Services.Contracts;
+using Microsoft.HackChecklist.UWP.Contracts;
 
 namespace Microsoft.HackChecklist.UWP.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-
         public const string ConfigurationFileName = "configuration";
+
+        private readonly IJsonSerializerService _jsonSerializerService;
+        private readonly IAppDataService _appDataService;
+
         private string _message;
-        private bool _goChecking = false;
-        private AppDataService _appDataService = new AppDataService();
+        private bool _isChecking;
         private List<Requirement> _requirements = new List<Requirement>();
 
-        public MainViewModel()
+        public MainViewModel(IJsonSerializerService jsonSerializerService, IAppDataService appDataService)
         {
+            _jsonSerializerService = jsonSerializerService;
+            _appDataService = appDataService;
             Init();
         }
 
-        public ICommand SendRequest => new RelayCommand(DoSendRequest);
-        public ICommand CheckNowCommand => new RelayCommand(CheckRegistry);
+        public ICommand CheckRequirementsCommand => new RelayCommand(CheckRequirementsAction, CheckRequirementsCan);
+
         public Configuration Configuration { get; set; }
 
         public List<Requirement> Requirements
         {
-            get
-            {
-                return _requirements;
-            }
+            get => _requirements;
             set
             {
                 _requirements = value;
@@ -42,12 +45,12 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             }
         }
 
-        public bool GoChecking
+        public bool IsChecking
         {
-            get { return _goChecking; }
+            get => _isChecking;
             set
             {
-                _goChecking = value;
+                _isChecking = value;
                 OnPropertyChanged();
             }
         }
@@ -66,20 +69,16 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
         public async void Init()
         {
             var strConfiguration = await _appDataService.GetDataFile(ConfigurationFileName);
-            var serializer = new JsonSerializerService();
-            var configuration = serializer.Deserialize<Configuration>(strConfiguration);
+            var configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
             Configuration = configuration;
-            DoSendRequest();
-        }
-
-        public void CheckRegistry()
-        {
-            GoChecking = true;
             Requirements = Configuration.Requirements.ToList();
+            CheckRequirementsAction();
         }
 
-        private async void DoSendRequest()
+        private async void CheckRequirementsAction()
         {
+            IsChecking = true;
+
             await LaunchBackgroundProcess();
 
             if (App.Connection == null) return;
@@ -89,7 +88,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             ValueSet valueSet;
             foreach (var requirement in Requirements)
             {
-                valueSet = new ValueSet { { "runChecks", requirement } };
+                valueSet = new ValueSet {{ BackgroundProcessCommand.RunChecks, _jsonSerializerService.Serialize(requirement) }};
                 var response = await App.Connection.SendMessageAsync(valueSet);
                 if (response?.Message.Keys.Contains(requirement.Name) ?? false)
                 {
@@ -98,21 +97,25 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             }
 
             // need to terminate the BackGround process!
-            valueSet = new ValueSet { { "terminate", true } };
+            valueSet = new ValueSet { { BackgroundProcessCommand.Terminate, true } };
             await App.Connection.SendMessageAsync(valueSet);
         }
 
-        private static async Task LaunchBackgroundProcess()
+        private bool CheckRequirementsCan()
+        {
+            return false;
+        }
+
+        private async Task LaunchBackgroundProcess()
         {
             try
             {
-                // Make sure the BackgroundProcess is in your AppX folder, if not rebuild the solution
                 await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
                 await Task.Delay(1000); // quick fix, need to make it better
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                // ignored
+                Debug.WriteLine(exception.Message);
             }
         }
     }
