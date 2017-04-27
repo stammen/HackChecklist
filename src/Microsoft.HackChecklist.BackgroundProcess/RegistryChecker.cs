@@ -1,9 +1,9 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Win32;
 
-namespace Microsoft.HackChecklist.SystemChecker
+namespace Microsoft.HackChecklist.BackgroundProcess
 {
     public static class RegistryChecker
     {
@@ -24,7 +24,7 @@ namespace Microsoft.HackChecklist.SystemChecker
 
             try
             {                
-                return localKey?.OpenSubKey(subKey).GetValue(valueKey).ToString() ?? null;
+                return localKey?.OpenSubKey(subKey)?.GetValue(valueKey).ToString();
             }
             catch
             {
@@ -51,13 +51,12 @@ namespace Microsoft.HackChecklist.SystemChecker
 
             try
             {
-                string value;
                 var key = localKey.OpenSubKey(subKey);
                 if (key != null)
                 {
-                    foreach (RegistryKey subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
+                    foreach (var subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
                     {
-                        value = subkey.GetValue(valueKey) as string;
+                        var value = subkey.GetValue(valueKey) as string;
                         if (value != null)
                         {
                             searchResult.Add(value);

@@ -1,18 +1,8 @@
-﻿//*********************************************************
-//
-// Copyright (c) Microsoft. All rights reserved.
-// This code is licensed under the MIT License (MIT).
-// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-//
-//*********************************************************
-
-using Autofac;
+﻿using Autofac;
 using Microsoft.HackChecklist.Services;
 using Microsoft.HackChecklist.Services.Contracts;
 using Microsoft.HackChecklist.UWP.Contracts;
+using Microsoft.HackChecklist.UWP.Services;
 using Microsoft.HackChecklist.UWP.ViewModels;
 
 namespace Microsoft.HackChecklist.UWP
@@ -21,11 +11,13 @@ namespace Microsoft.HackChecklist.UWP
     {
         private static IContainer _container;
 
-        public static void Init()
+        public static void Configure()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<MainViewModel>().As<IMainViewModel>().SingleInstance();
             builder.RegisterType<JsonSerializerService>().As<IJsonSerializerService>().SingleInstance();
+            builder.RegisterType<AppDataService>().As<IAppDataService>().SingleInstance();
+
+            builder.RegisterType<MainViewModel>().SingleInstance();
 
             _container = builder.Build();
         }

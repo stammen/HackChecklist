@@ -99,7 +99,6 @@
   <ItemGroup>
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="RegistryChecker.cs" />
-    <Compile Include="StringExtensions.cs" />
     <Compile Include="SystemChecker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,6 +112,16 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\packages\UwpDesktop.10.0.14393.3\analyzers\dotnet\UwpDesktopAnalyzer.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.HackChecklist.Models\Microsoft.HackChecklist.Models.csproj">
+      <Project>{7f5a7169-f13a-48ea-851a-959c0f4e7426}</Project>
+      <Name>Microsoft.HackChecklist.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.HackChecklist.Services\Microsoft.HackChecklist.Services.csproj">
+      <Project>{f841be3a-b482-4d9c-836e-28665cbfa8bc}</Project>
+      <Name>Microsoft.HackChecklist.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\UwpDesktop.10.0.14393.3\build\portable-net45+uap\UwpDesktop.targets" Condition="Exists('..\..\packages\UwpDesktop.10.0.14393.3\build\portable-net45+uap\UwpDesktop.targets')" />

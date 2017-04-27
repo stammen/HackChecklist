@@ -1,4 +1,4 @@
-﻿namespace Microsoft.HackChecklist.Models
+﻿namespace Microsoft.HackChecklist.Models.Enums
 {
     public enum CheckType
     {

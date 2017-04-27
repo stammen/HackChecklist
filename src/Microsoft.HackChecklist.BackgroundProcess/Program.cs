@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.HackChecklist.SystemChecker
+namespace Microsoft.HackChecklist.BackgroundProcess
 {
     public class Program
     {
@@ -8,7 +8,7 @@ namespace Microsoft.HackChecklist.SystemChecker
 
         public static void Main(string[] args)
         {
-            new SystemChecker().Run(args[0], args[1]);
+            new SystemChecker().Run();
             Console.ReadKey();
         }
     }
