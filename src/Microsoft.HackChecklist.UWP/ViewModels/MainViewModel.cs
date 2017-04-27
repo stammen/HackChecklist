@@ -12,6 +12,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Foundation.Collections;
+using Windows.ApplicationModel.Resources;
+using System.Resources;
+using System.Reflection;
+using Microsoft.HackChecklist.UWP.Consts;
 
 namespace Microsoft.HackChecklist.UWP.ViewModels
 {
@@ -23,8 +27,13 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
         private readonly IAppDataService _appDataService;
         private readonly IAnalyticsService _analyticsService;
 
+        private ResourceLoader _resourceLoader = new ResourceLoader();
+
         private string _message;
         private bool _isChecking;
+        private string _messageChecking;
+        private string _messageChecked;
+
         private List<Requirement> _requirements = new List<Requirement>();
 
         public MainViewModel(IJsonSerializerService jsonSerializerService, IAppDataService appDataService, IAnalyticsService analyticsService)
@@ -48,6 +57,27 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public string MessageChecking
+        {
+            get { return _messageChecking; }
+            set
+            {
+                _messageChecking = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string MessageChecked
+        {
+            get { return _messageChecked; }
+            set
+            {
+                _messageChecked = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public bool IsChecking
         {
@@ -76,6 +106,8 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             var configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
             Configuration = configuration;
             Requirements = Configuration.Requirements.ToList();
+            AllowActivateLoading(true);
+            CheckRequirementsAction();
             _analyticsService.TrackScreen(AnalyticsConfiguration.MainViewScreenName);
         }
 
@@ -87,7 +119,8 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
                 null,
                 0);
             IsChecking = true;
-
+            MessageChecking = _resourceLoader.GetString("TitleChecking");
+            
             await LaunchBackgroundProcess();
 
             if (App.Connection == null) return;
@@ -98,11 +131,15 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             foreach (var requirement in Requirements)
             {
                 valueSet = new ValueSet { { BackgroundProcessCommand.RunChecks, _jsonSerializerService.Serialize(requirement) } };
+
+                requirement.ActivateLoading = false;
+                requirement.Status = ResponseStatus.Processing;
+
                 var response = await App.Connection.SendMessageAsync(valueSet);
                 var passed = false;
                 if (response?.Message.Keys.Contains(requirement.Name) ?? false)
                 {
-                    // TODO: WIP Update the list of requirements with the results of the check.                    
+                    // TODO: WIP Update the list of requirements with the results of the check. 
                 }
                 _analyticsService.TrackEvent(
                     AnalyticsConfiguration.CheckCategory, 
@@ -133,6 +170,18 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             {
                 Debug.WriteLine(exception.Message);
             }
-        }       
+        }
+
+        private void AllowActivateLoading(bool value)
+        {
+            for (int i = 0; i < Requirements.LongCount(); i++)
+            {
+                Requirements[i].ActivateLoading = value;
+                if (Requirements[i].Modules != null)
+                {
+                    Requirements[i].Modules.ToList().ForEach(module => module.ActivateLoading = value);
+                }
+            }
+        }
     }
 }

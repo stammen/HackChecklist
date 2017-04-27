@@ -126,10 +126,19 @@
   <data name="Stop.Content" xml:space="preserve">
     <value>Stop checker</value>
   </data>
+  <data name="SubTitleCheckFile" xml:space="preserve">
+    <value>Please update/install the required apps</value>
+  </data>
+  <data name="SubTitleCheckSucces" xml:space="preserve">
+    <value>Congratulations, you hace all the required apps</value>
+  </data>
   <data name="Terms.Text" xml:space="preserve">
     <value>Terms of use</value>
   </data>
-  <data name="TitleLoading.Text" xml:space="preserve">
+  <data name="TitleCheckCompleted" xml:space="preserve">
+    <value>Check completed</value>
+  </data>
+  <data name="TitleChecking" xml:space="preserve">
     <value>Checking... please wait</value>
   </data>
   <data name="ToolHelp.Text" xml:space="preserve">
