@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
          xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
          xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
@@ -21,7 +20,7 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="UWP.App">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Microsoft.HackChecklist.UWP.App">
       <uap:VisualElements DisplayName="Hack Checklist" Square150x150Logo="Assets\Square150x150Logo.png"
                           Square44x44Logo="Assets\Square44x44Logo.png"
                           Description="This app checks if all the required software for the HackFest is installed on your computer."

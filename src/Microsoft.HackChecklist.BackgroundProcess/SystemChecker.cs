@@ -24,7 +24,7 @@ namespace Microsoft.HackChecklist.BackgroundProcess
             _connection = new AppServiceConnection();
             _connection.AppServiceName = "CommunicationService";
             _connection.PackageFamilyName = Windows.ApplicationModel.Package.Current.Id.FamilyName;
-            _connection.RequestReceived += ConnectionRequestReceived;
+            _connection.RequestReceived += RequestReceived;
         }
 
         public void Run()
@@ -35,39 +35,66 @@ namespace Microsoft.HackChecklist.BackgroundProcess
 
         private async void ConnectionThread()
         {
-            Console.WriteLine("I am listening");
-            var status = await _connection.OpenAsync();
-            switch (status)
+            try
             {
-                case AppServiceConnectionStatus.Success:
-                    Debug.WriteLine("Connection established - waiting for requests");
-                    break;
-                case AppServiceConnectionStatus.AppNotInstalled:
-                    Debug.WriteLine("The app AppServicesProvider is not installed.");
-                    return;
-                case AppServiceConnectionStatus.AppUnavailable:
-                    Debug.WriteLine("The app AppServicesProvider is not available.");
-                    return;
-                case AppServiceConnectionStatus.AppServiceUnavailable:
-                    Debug.WriteLine($"The app AppServicesProvider is installed but it does not provide the app service {_connection.AppServiceName}.");
-                    return;
-                case AppServiceConnectionStatus.Unknown:
-                    Debug.WriteLine("An unkown error occurred while we were trying to open an AppServiceConnection.");
-                    return;
+                Console.WriteLine("I am the thread");
+                var status = await _connection.OpenAsync();
+                Console.WriteLine($"I am listening with status: {status}");
+                switch (status)
+                {
+                    case AppServiceConnectionStatus.Success:
+                        Console.WriteLine("Connection established - waiting for requests");
+                        break;
+                    case AppServiceConnectionStatus.AppNotInstalled:
+                        Console.WriteLine("The app AppServicesProvider is not installed.");
+                        return;
+                    case AppServiceConnectionStatus.AppUnavailable:
+                        Console.WriteLine("The app AppServicesProvider is not available.");
+                        return;
+                    case AppServiceConnectionStatus.AppServiceUnavailable:
+                        Console.WriteLine($"The app AppServicesProvider is installed but it does not provide the app service {_connection.AppServiceName}.");
+                        return;
+                    case AppServiceConnectionStatus.Unknown:
+                        Console.WriteLine("An unkown error occurred while we were trying to open an AppServiceConnection.");
+                        return;
+                    case AppServiceConnectionStatus.RemoteSystemUnavailable:
+                        break;
+                    case AppServiceConnectionStatus.RemoteSystemNotSupportedByApp:
+                        break;
+                    case AppServiceConnectionStatus.NotAuthorized:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
         }
 
-        private void ConnectionRequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        private void RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
             var key = args.Request.Message.First().Key;
-            var value = new JsonSerializerService().Deserialize<Requirement>(args.Request.Message.First().Value.ToString());
+            Console.WriteLine($"I have something {key} - {args.Request.Message.First().Value}");
+            Requirement value;
+            try
+            {
+                value = new JsonSerializerService().Deserialize<Requirement>(args.Request.Message.First().Value.ToString());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
             Console.WriteLine($"Received message '{key}' with value '{value}'");
 
             if (key == BackgroundProcessCommand.Request)
             {
                 var valueSet = new ValueSet();
                 valueSet.Add("response", value.ToString().ToUpper());
-                Debug.WriteLine($"Sending response: '{value.ToString().ToUpper()}'");
+                Console.WriteLine($"Sending response: '{value.ToString().ToUpper()}'");
                 args.Request.SendResponseAsync(valueSet).Completed += delegate { };
             }
             else if (key == BackgroundProcessCommand.RunChecks)
@@ -81,7 +108,7 @@ namespace Microsoft.HackChecklist.BackgroundProcess
             {
                 var valueSet = new ValueSet();
                 valueSet.Add("response", true);
-                Debug.WriteLine("Sending terminate response: \'true\'");
+                Console.WriteLine("Sending terminate response: \'true\'");
                 args.Request.SendResponseAsync(valueSet).Completed += delegate {
                 };
             }
