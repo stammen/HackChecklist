@@ -1,21 +1,19 @@
 ﻿using Microsoft.HackChecklist.Models;
-using Windows.ApplicationModel;
 using Microsoft.HackChecklist.Models.Consts;
 using Microsoft.HackChecklist.Services.Contracts;
+using Microsoft.HackChecklist.UWP.Consts;
 using Microsoft.HackChecklist.UWP.Contracts;
 using Microsoft.HackChecklist.UWP.Services;
 using Microsoft.HackChecklist.UWP.ViewModels.Base;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.Foundation.Collections;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
-using System.Resources;
-using System.Reflection;
-using Microsoft.HackChecklist.UWP.Consts;
+using Windows.Foundation.Collections;
 
 namespace Microsoft.HackChecklist.UWP.ViewModels
 {
@@ -34,7 +32,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
         private string _messageChecking;
         private string _messageChecked;
 
-        private List<Requirement> _requirements = new List<Requirement>();
+        private ObservableCollection<Requirement> _requirements = new ObservableCollection<Requirement>();
 
         public MainViewModel(IJsonSerializerService jsonSerializerService, IAppDataService appDataService, IAnalyticsService analyticsService)
         {
@@ -48,7 +46,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
 
         public Configuration Configuration { get; set; }
 
-        public List<Requirement> Requirements
+        public ObservableCollection<Requirement> Requirements
         {
             get => _requirements;
             set
@@ -105,7 +103,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             var strConfiguration = await _appDataService.GetDataFile(ConfigurationFileName);
             var configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
             Configuration = configuration;
-            Requirements = Configuration.Requirements.ToList();
+            Configuration.Requirements.ToList().ForEach(Requirements.Add);
             AllowActivateLoading(true);
             CheckRequirementsAction();
             _analyticsService.TrackScreen(AnalyticsConfiguration.MainViewScreenName);
@@ -136,17 +134,23 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
                 requirement.Status = ResponseStatus.Processing;
 
                 var response = await App.Connection.SendMessageAsync(valueSet);
-                var passed = false;
-                if (response?.Message.Keys.Contains(requirement.Name) ?? false)
-                {
-                    // TODO: WIP Update the list of requirements with the results of the check. 
-                }
+                var passed = (response?.Message.Keys.Contains(requirement.Name) ?? false)
+                    ? (bool)response?.Message[requirement.Name]
+                    : false;
+
+                requirement.Status = passed ? ResponseStatus.Success : ResponseStatus.Failed;
+
                 _analyticsService.TrackEvent(
                     AnalyticsConfiguration.CheckCategory, 
                     AnalyticsConfiguration.CheckRequirementAction, 
                     requirement.Name, 
                     passed ? 1 : 0);
             }
+
+            MessageChecking = _resourceLoader.GetString("TitleCheckCompleted");
+            MessageChecked = Requirements.Any(requirement => !requirement.IsOptional && requirement.Status != ResponseStatus.Success) 
+                ? _resourceLoader.GetString("SubTitleCheckFile")
+                : _resourceLoader.GetString("SubTitleCheckSucces");
 
             // need to terminate the BackGround process!
             valueSet = new ValueSet { { BackgroundProcessCommand.Terminate, true } };

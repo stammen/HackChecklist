@@ -1,14 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using Windows.ApplicationModel.AppService;
-using Windows.Foundation.Collections;
-using Microsoft.HackChecklist.BackgroundProcess.Extensions;
+﻿using Microsoft.HackChecklist.BackgroundProcess.Extensions;
 using Microsoft.HackChecklist.Models;
 using Microsoft.HackChecklist.Models.Consts;
 using Microsoft.HackChecklist.Models.Enums;
 using Microsoft.HackChecklist.Services;
+using System;
+using System.Linq;
+using System.Threading;
+using Windows.ApplicationModel.AppService;
+using Windows.Foundation.Collections;
 
 namespace Microsoft.HackChecklist.BackgroundProcess
 {

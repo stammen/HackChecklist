@@ -130,7 +130,7 @@
     <value>Please update/install the required apps</value>
   </data>
   <data name="SubTitleCheckSucces" xml:space="preserve">
-    <value>Congratulations, you hace all the required apps</value>
+    <value>Congratulations, you have all the required apps</value>
   </data>
   <data name="Terms.Text" xml:space="preserve">
     <value>Terms of use</value>
