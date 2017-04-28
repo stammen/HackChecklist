@@ -165,7 +165,7 @@
                         <TextBlock  Text="Optional" Style="{StaticResource SubTitleOptionalCheckingTextBlockStyle}"/>
                     </StackPanel>
                 </StackPanel>
-                <TextBlock Grid.Row="1" Text="{Binding InstallationRegistryValue}" Style="{StaticResource SubTitleCheckingTextBlockStyle}"/>
+                <TextBlock Grid.Row="1" Text="{Binding AdditionalInformation}" Style="{StaticResource SubTitleCheckingTextBlockStyle}"/>
                 <ProgressRing Grid.RowSpan="2" Foreground="{StaticResource SecondaryLightColorBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Height="22" Width="24" Margin="0,0,8,0"
                               IsActive="{Binding ActivateLoading}"/>
                 <Image Grid.RowSpan="2"  VerticalAlignment="Center" HorizontalAlignment="Right" Height="20" Width="20" Margin="0,0,8,0"
