@@ -15,6 +15,7 @@ using Microsoft.HackChecklist.Models;
 using Microsoft.HackChecklist.Models.Consts;
 using Microsoft.HackChecklist.Models.Enums;
 using Microsoft.HackChecklist.Services;
+using Microsoft.Win32;
 using System;
 using System.Linq;
 using System.Threading;
@@ -25,9 +26,6 @@ namespace Microsoft.HackChecklist.BackgroundProcess
 {
     public class SystemChecker
     {
-        private const string UninstallRegistrySubKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
-        private const string UninstallRegistryKeyValue = "DisplayName";
-
         private readonly AppServiceConnection _connection;        
 
         public SystemChecker()
@@ -88,7 +86,6 @@ namespace Microsoft.HackChecklist.BackgroundProcess
         private void RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
             var key = args.Request.Message.First().Key;
-            Console.WriteLine($"I have something {key} - {args.Request.Message.First().Value}");
             Requirement value;
             try
             {
@@ -99,7 +96,6 @@ namespace Microsoft.HackChecklist.BackgroundProcess
                 Console.WriteLine(e);
                 throw;
             }
-            Console.WriteLine($"Received message '{key}' with value '{value}'");
 
             if (key == BackgroundProcessCommand.Request)
             {
@@ -132,33 +128,54 @@ namespace Microsoft.HackChecklist.BackgroundProcess
 
         private bool CheckRequirement(Software software)
         {
+            var registryValue = string.Empty;
             var checkResult = false;
+            Console.WriteLine($"Checking: {software.Name}");
             switch (software.CheckType)
             {
-                case CheckType.RegistryValueCheck:
-                    checkResult = string.CompareOrdinal(
-                        RegistryChecker.GetLocalRegistryValue(software.InstallationRegistryKey, software.InstallationRegistryValue),
-                        software.InstallationRegistryExpectedValue) == 0;
+                case CheckType.RegistryValue:
+                    registryValue = RegistryChecker.GetRegistryValue(
+                            ParseRegistryHive(software.RegistryHive),
+                            software.RegistryKey,
+                            software.RegistryValue);
+                    checkResult = string.CompareOrdinal(registryValue, software.RegistryExpectedValue) == 0;
+                    Console.WriteLine($" -----> {registryValue}");
                     break;
-                case CheckType.IncludedInRegistryInstallationCheck:
-                    var installedSoftware = RegistryChecker.GetLocalRegistryValues(UninstallRegistrySubKey, UninstallRegistryKeyValue);
-                    checkResult = installedSoftware?.Any(program =>
-                        program.Contains(software.InstallationRegistryKey, StringComparison.InvariantCultureIgnoreCase)) ?? false;
+                case CheckType.IncludedInRegistry:
+                    var registryValues = RegistryChecker.GetRegistryValues(
+                        ParseRegistryHive(software.RegistryHive),
+                        software.RegistryKey, 
+                        software.RegistryValue);
+                    checkResult = registryValues?.Any(value =>
+                        value.Contains(software.RegistryExpectedValue, StringComparison.InvariantCultureIgnoreCase)) ?? false;
+                    Console.WriteLine($" -----> {registryValues.Count()}");
                     break;
-                case CheckType.VisualStudioInstalledCheck:
+                case CheckType.VisualStudioInstalled:
                     checkResult = new VisualStudioChecker().IsVisualStudio2017Installed();
                     break;
-                case CheckType.VisualStudioWorkloadInstalledCheck:
-                    checkResult = new VisualStudioChecker().IsWorkloadInstalled(software.InstallationRegistryKey);
+                case CheckType.VisualStudioWorkloadInstalled:
+                    checkResult = new VisualStudioChecker().IsWorkloadInstalled(software.RegistryKey);
                     break;
-                case CheckType.MinimumRegistryValueCheck:
-                    checkResult = string.CompareOrdinal(
-                        RegistryChecker.GetLocalRegistryValue(software.InstallationRegistryKey, software.InstallationRegistryValue),
-                        software.InstallationRegistryExpectedValue) >= 0;
+                case CheckType.MinimumVisualStudioWorkloadInstalled:
+                    checkResult = new VisualStudioChecker().IsWorkloadInstalled(software.RegistryKey, software.RegistryExpectedValue);
+                    break;
+                case CheckType.MinimumRegistryValue:
+                    registryValue = RegistryChecker.GetRegistryValue(
+                            ParseRegistryHive(software.RegistryHive),
+                            software.RegistryKey,
+                            software.RegistryValue);
+                    checkResult = string.CompareOrdinal(registryValue, software.RegistryExpectedValue) >= 0;
+                    Console.WriteLine($" -----> {registryValue}");
                     break;
             }
-
+            Console.WriteLine($" -----> Passed: {checkResult}");
             return checkResult;
+        }
+
+        private RegistryHive ParseRegistryHive(string hive)
+        {
+            RegistryHive result = RegistryHive.LocalMachine;            
+            return Enum.TryParse(hive, out result) ? result : RegistryHive.LocalMachine;
         }
     }
 }

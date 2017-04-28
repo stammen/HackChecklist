@@ -13,10 +13,11 @@ namespace Microsoft.HackChecklist.Models.Enums
 {
     public enum CheckType
     {
-        RegistryValueCheck,
-        MinimumRegistryValueCheck,
-        IncludedInRegistryInstallationCheck,        
-        VisualStudioInstalledCheck,
-        VisualStudioWorkloadInstalledCheck
+        RegistryValue,
+        MinimumRegistryValue,
+        IncludedInRegistry,        
+        VisualStudioInstalled,
+        VisualStudioWorkloadInstalled,
+        MinimumVisualStudioWorkloadInstalled
     }
 }

@@ -34,6 +34,22 @@ namespace Microsoft.HackChecklist.BackgroundProcess
             return IsPackageInstalled((packages) => true);
         }
 
+        public bool IsWorkloadInstalled(string workloadId, string minimumVersion)
+        {
+            if (string.IsNullOrEmpty(workloadId)) return false;
+
+            return IsPackageInstalled((packages) =>
+            {
+                if (packages == null || !packages.Any()) return false;
+
+                var workloadPackage = packages.Where(p =>
+                    string.Equals(p.GetType(), WorkloadPackageType, StringComparison.InvariantCultureIgnoreCase) &&
+                    string.Equals(p.GetId(), workloadId, StringComparison.InvariantCultureIgnoreCase) &&
+                    string.Compare(minimumVersion, p.GetVersion()) >= 0);
+                return workloadPackage.Any();
+            });
+        }
+
         public bool IsWorkloadInstalled(string workloadId)
         {
             if (string.IsNullOrEmpty(workloadId)) return false;

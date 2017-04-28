@@ -18,24 +18,36 @@ namespace Microsoft.HackChecklist.BackgroundProcess
 {
     public static class RegistryChecker
     {
-        public static string GetLocalRegistryValue(string subKey, string valueKey)
+        public static IEnumerable<string> GetRegistryValues(RegistryHive hive, string subKey, string valueKey)
         {
-            return GetLocalRegistryValue(subKey, valueKey, GetLocalRegistryKey());
+            return GetRegistryValues(subKey, valueKey, GetRegistryKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                .Union(GetRegistryValues(subKey, valueKey, GetRegistryKey(RegistryHive.LocalMachine, RegistryView.Registry32)));
         }
 
-        public static IEnumerable<string> GetLocalRegistryValues(string subKey, string valueKey)
+        public static string GetRegistryValue(RegistryHive hive, string subKey, string valueKey)
+        {
+            return GetRegistryValue(subKey, valueKey, GetRegistryKey(hive));
+        }        
+
+        private static RegistryKey GetRegistryKey(RegistryHive hive)
+        {
+            return (Environment.Is64BitOperatingSystem)
+                ? GetRegistryKey(hive, RegistryView.Registry64)
+                : GetRegistryKey(hive, RegistryView.Registry32);
+        }
+
+        private static RegistryKey GetRegistryKey(RegistryHive hive, RegistryView view)
         {            
-            return GetLocalRegistryValues(subKey, valueKey, GetLocalRegistryKey(RegistryView.Registry64))
-                .Union(GetLocalRegistryValues(subKey, valueKey, GetLocalRegistryKey(RegistryView.Registry32)));
+            return RegistryKey.OpenBaseKey(hive, view);
         }
 
-        private static string GetLocalRegistryValue(string subKey, string valueKey, RegistryKey localKey)
+        private static string GetRegistryValue(string subKey, string valueKey, RegistryKey registryKey)
         {
             if (string.IsNullOrEmpty(subKey) || string.IsNullOrEmpty(valueKey)) return null;
 
             try
-            {                
-                return localKey?.OpenSubKey(subKey)?.GetValue(valueKey).ToString();
+            {
+                return registryKey?.OpenSubKey(subKey)?.GetValue(valueKey).ToString();
             }
             catch
             {
@@ -43,26 +55,14 @@ namespace Microsoft.HackChecklist.BackgroundProcess
             }
         }
 
-        private static RegistryKey GetLocalRegistryKey()
-        {
-            return (Environment.Is64BitOperatingSystem)
-                ? GetLocalRegistryKey(RegistryView.Registry64)
-                : GetLocalRegistryKey(RegistryView.Registry32);
-        }
-
-        private static RegistryKey GetLocalRegistryKey(RegistryView view)
-        {
-            return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view);
-        }
-
-        private static IEnumerable<string> GetLocalRegistryValues(string subKey, string valueKey, RegistryKey localKey)
+        private static IEnumerable<string> GetRegistryValues(string subKey, string valueKey, RegistryKey registryKey)
         {
             var searchResult = new List<string>();
-            if (localKey == null) return searchResult;
+            if (registryKey == null) return searchResult;
 
             try
             {
-                var key = localKey.OpenSubKey(subKey);
+                var key = registryKey.OpenSubKey(subKey);
                 if (key != null)
                 {
                     foreach (var subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
