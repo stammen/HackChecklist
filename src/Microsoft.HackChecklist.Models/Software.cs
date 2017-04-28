@@ -21,7 +21,7 @@ namespace Microsoft.HackChecklist.Models
 
         public string InstallationNotes { get; set; }
 
-        public string Status { get; set; }
+        public ResponseStatus Status { get; set; } = ResponseStatus.None;
 
         public bool ActivateLoading { get; set; }
     }
