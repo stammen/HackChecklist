@@ -1,4 +1,16 @@
-﻿using Microsoft.HackChecklist.BackgroundProcess.Extensions;
+﻿//*********************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
+
+using System.Threading.Tasks;
+using Microsoft.HackChecklist.BackgroundProcess.Extensions;
 using Microsoft.HackChecklist.Models;
 using Microsoft.HackChecklist.Models.Consts;
 using Microsoft.HackChecklist.Models.Enums;
@@ -100,8 +112,13 @@ namespace Microsoft.HackChecklist.BackgroundProcess
             {
                 var valueSet = new ValueSet();
                 var software = (Software)value;
-                if (software != null) valueSet.Add(software.Name, CheckRequirement(software));
+                if (software != null)
+                {
+                    valueSet.Add(software.Name, CheckRequirement(software));
+                }
+                Console.WriteLine($"Responsing valueSet: {valueSet}");
                 args.Request.SendResponseAsync(valueSet).Completed += delegate { };
+                Console.WriteLine($"Responsed with {software?.Status}");
             }
             else if (key == BackgroundProcessCommand.RunChecks)
             {

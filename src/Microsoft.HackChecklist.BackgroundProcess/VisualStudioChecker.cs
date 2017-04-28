@@ -69,7 +69,10 @@ namespace Microsoft.HackChecklist.BackgroundProcess
 
         private ISetupConfiguration GetVisualStudioConfiguration()
         {
-            if (SetupConfiguration != null) return SetupConfiguration;
+            if (SetupConfiguration != null)
+            {
+                return SetupConfiguration;
+            }
 
             try
             {

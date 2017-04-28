@@ -10,6 +10,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
     public class RequirementViewModel : ViewModelBase, ISoftware
     {
         private Requirement _requirement;
+        private ResponseStatus _status = ResponseStatus.None;
 
         public RequirementViewModel(Requirement requirement)
         {
@@ -98,15 +99,15 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
 
         public ResponseStatus Status 
         {
-            get => _requirement.Status;
+            get => _status;
             set
             {
-                _requirement.Status = value;
+                _status = value;
                 OnPropertyChanged(nameof(Status));
             }
         }
 
-        public ObservableCollection<Software> Modules { get; set; }
+        public ObservableCollection<RequirementViewModel> Modules { get; set; }
 
         public Requirement ModelObject
         {
@@ -114,7 +115,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             {
                 if (Modules != null)
                 {
-                    _requirement.Modules = Modules.ToList();
+                    _requirement.Modules = Modules.Select(x => x.ModelObject);
                 }
                 return _requirement;
             }
@@ -124,7 +125,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
                 _requirement = value;
                 if (_requirement.Modules != null)
                 {
-                    Modules = new ObservableCollection<Software>(_requirement.Modules);
+                    Modules = new ObservableCollection<RequirementViewModel>(_requirement.Modules.Select(x => new RequirementViewModel(x)));
                 }
             }
         }
