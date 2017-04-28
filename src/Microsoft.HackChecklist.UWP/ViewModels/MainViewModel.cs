@@ -1,4 +1,15 @@
-﻿using Microsoft.HackChecklist.Models;
+﻿//*********************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
+
+using Microsoft.HackChecklist.Models;
 using Microsoft.HackChecklist.Models.Consts;
 using Microsoft.HackChecklist.Services.Contracts;
 using Microsoft.HackChecklist.UWP.Consts;
@@ -25,7 +36,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
         private readonly IAppDataService _appDataService;
         private readonly IAnalyticsService _analyticsService;
 
-        private ResourceLoader _resourceLoader = new ResourceLoader();
+        private readonly ResourceLoader _resourceLoader = new ResourceLoader();
 
         private string _message;
         private bool _isChecking;
@@ -44,21 +55,11 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
 
         public ICommand CheckRequirementsCommand => new RelayCommand(CheckRequirementsAction, CheckRequirementsCan);
 
-        public Configuration Configuration { get; set; }
-
-        public ObservableCollection<Requirement> Requirements
-        {
-            get => _requirements;
-            set
-            {
-                _requirements = value;
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<RequirementViewModel> Requirements { get; } = new ObservableCollection<RequirementViewModel>();
 
         public string MessageChecking
         {
-            get { return _messageChecking; }
+            get => _messageChecking;
             set
             {
                 _messageChecking = value;
@@ -68,7 +69,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
 
         public string MessageChecked
         {
-            get { return _messageChecked; }
+            get => _messageChecked;
             set
             {
                 _messageChecked = value;
@@ -101,21 +102,20 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
         public async void Init()
         {
             var strConfiguration = await _appDataService.GetDataFile(ConfigurationFileName);
-            var configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
-            Configuration = configuration;
-            Configuration.Requirements.ToList().ForEach(Requirements.Add);
+            Configuration configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
             AllowActivateLoading(true);
             CheckRequirementsAction();
+            foreach (var requirement in configuration.Requirements)
+            {
+                Requirements.Add(new RequirementViewModel(requirement));                
+            }
+
             _analyticsService.TrackScreen(AnalyticsConfiguration.MainViewScreenName);
         }
 
         private async void CheckRequirementsAction()
         {
-            _analyticsService.TrackEvent(
-                AnalyticsConfiguration.CheckCategory,
-                AnalyticsConfiguration.CheckAllRequirementsAction,
-                null,
-                0);
+            _analyticsService.TrackEvent(AnalyticsConfiguration.CheckCategory, AnalyticsConfiguration.CheckAllRequirementsAction, null, 0);
             IsChecking = true;
             MessageChecking = _resourceLoader.GetString("TitleChecking");
             
