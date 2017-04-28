@@ -95,9 +95,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Consts\ResponseStatus.cs" />
     <Compile Include="Contracts\IAnalyticsService.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\ActivateStatusToBooleanConverter.cs" />
     <Compile Include="Converters\StatusImageConverter.cs" />
     <Compile Include="IoCConfiguration.cs" />
     <Compile Include="Properties\Annotations.cs" />
@@ -123,7 +123,7 @@
     <Content Include="Assets\clouds.png" />
     <Content Include="Assets\HackCheckerIcon-21x15.png" />
     <Content Include="Assets\HackCheckerIcon_170x170.png" />
-    <Content Include="Assets\Processing.png" />
+    <Content Include="Assets\None.png" />
     <Content Include="Assets\Optional.png" />
     <Content Include="Assets\Failed.png" />
     <Content Include="configuration.json">

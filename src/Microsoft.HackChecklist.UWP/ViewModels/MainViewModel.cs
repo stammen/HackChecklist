@@ -12,7 +12,6 @@
 using Microsoft.HackChecklist.Models;
 using Microsoft.HackChecklist.Models.Consts;
 using Microsoft.HackChecklist.Services.Contracts;
-using Microsoft.HackChecklist.UWP.Consts;
 using Microsoft.HackChecklist.UWP.Contracts;
 using Microsoft.HackChecklist.UWP.Services;
 using Microsoft.HackChecklist.UWP.ViewModels.Base;
@@ -25,6 +24,7 @@ using System.Windows.Input;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
+using ResponseStatus = Microsoft.HackChecklist.Models.Enums.ResponseStatus;
 
 namespace Microsoft.HackChecklist.UWP.ViewModels
 {
@@ -42,8 +42,6 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
         private bool _isChecking;
         private string _messageChecking;
         private string _messageChecked;
-
-        private ObservableCollection<Requirement> _requirements = new ObservableCollection<Requirement>();
 
         public MainViewModel(IJsonSerializerService jsonSerializerService, IAppDataService appDataService, IAnalyticsService analyticsService)
         {
@@ -77,7 +75,6 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             }
         }
 
-
         public bool IsChecking
         {
             get => _isChecking;
@@ -103,7 +100,6 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
         {
             var strConfiguration = await _appDataService.GetDataFile(ConfigurationFileName);
             Configuration configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
-            AllowActivateLoading(true);
             CheckRequirementsAction();
             foreach (var requirement in configuration.Requirements)
             {
@@ -130,7 +126,6 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             {
                 valueSet = new ValueSet { { BackgroundProcessCommand.RunChecks, _jsonSerializerService.Serialize(requirement) } };
 
-                requirement.ActivateLoading = false;
                 requirement.Status = ResponseStatus.Processing;
 
                 var response = await App.Connection.SendMessageAsync(valueSet);
@@ -173,18 +168,6 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             catch (Exception exception)
             {
                 Debug.WriteLine(exception.Message);
-            }
-        }
-
-        private void AllowActivateLoading(bool value)
-        {
-            for (int i = 0; i < Requirements.LongCount(); i++)
-            {
-                Requirements[i].ActivateLoading = value;
-                if (Requirements[i].Modules != null)
-                {
-                    Requirements[i].Modules.ToList().ForEach(module => module.ActivateLoading = value);
-                }
             }
         }
     }
