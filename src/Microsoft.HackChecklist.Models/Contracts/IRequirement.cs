@@ -4,6 +4,6 @@ namespace Microsoft.HackChecklist.Models.Contracts
 {
     public interface IRequirement : ISoftware
     {
-        IEnumerable<Software> Modules { get; set; }
+        IEnumerable<Requirement> Modules { get; set; }
     }
 }
