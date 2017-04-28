@@ -21,9 +21,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
+using static Windows.ApplicationModel.FullTrustProcessLauncher;
 using ResponseStatus = Microsoft.HackChecklist.Models.Enums.ResponseStatus;
 
 namespace Microsoft.HackChecklist.UWP.ViewModels
@@ -143,9 +143,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             requirement.Status = ResponseStatus.Processing;
 
             var response = await App.Connection.SendMessageAsync(valueSet);
-            var passed = (response?.Message.Keys.Contains(requirement.Name) ?? false)
-                ? (bool)response?.Message[requirement.Name]
-                : false;
+            var passed = (response?.Message.Keys.Contains(requirement.Name) ?? false) && (bool)response.Message[requirement.Name];
 
             requirement.Status = passed ? ResponseStatus.Success : ResponseStatus.Failed;
 
@@ -167,7 +165,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
         {
             try
             {
-                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                await LaunchFullTrustProcessForCurrentAppAsync();
                 await Task.Delay(1000); // quick fix, need to make it better
             }
             catch (Exception exception)
