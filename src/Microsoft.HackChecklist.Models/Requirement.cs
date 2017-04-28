@@ -5,6 +5,6 @@ namespace Microsoft.HackChecklist.Models
 {
     public class Requirement : Software, IRequirement
     {
-        public IEnumerable<Software> Modules { get; set; }
+        public IEnumerable<Requirement> Modules { get; set; }
     }
 }

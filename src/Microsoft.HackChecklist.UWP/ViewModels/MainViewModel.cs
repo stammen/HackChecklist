@@ -114,43 +114,48 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             _analyticsService.TrackEvent(AnalyticsConfiguration.CheckCategory, AnalyticsConfiguration.CheckAllRequirementsAction, null, 0);
             IsChecking = true;
             MessageChecking = _resourceLoader.GetString("TitleChecking");
-            
+
             await LaunchBackgroundProcess();
 
             if (App.Connection == null) return;
 
             Message = "running";
 
-            ValueSet valueSet;
             foreach (var requirement in Requirements)
             {
-                valueSet = new ValueSet { { BackgroundProcessCommand.RunChecks, _jsonSerializerService.Serialize(requirement) } };
-
-                requirement.Status = ResponseStatus.Processing;
-
-                var response = await App.Connection.SendMessageAsync(valueSet);
-                var passed = (response?.Message.Keys.Contains(requirement.Name) ?? false)
-                    ? (bool)response?.Message[requirement.Name]
-                    : false;
-
-                requirement.Status = passed ? ResponseStatus.Success : ResponseStatus.Failed;
-
-                _analyticsService.TrackEvent(
-                    AnalyticsConfiguration.CheckCategory, 
-                    AnalyticsConfiguration.CheckRequirementAction, 
-                    requirement.Name, 
-                    passed ? 1 : 0);
+                await CheckRequirementRecursive(requirement);
             }
 
             MessageChecking = _resourceLoader.GetString("TitleCheckCompleted");
-            MessageChecked = Requirements.Any(requirement => !requirement.IsOptional && requirement.Status != ResponseStatus.Success) 
+            MessageChecked = Requirements.Any(requirement => !requirement.IsOptional && requirement.Status != ResponseStatus.Success)
                 ? _resourceLoader.GetString("SubTitleCheckFile")
                 : _resourceLoader.GetString("SubTitleCheckSucces");
 
-            // need to terminate the BackGround process!
-            valueSet = new ValueSet { { BackgroundProcessCommand.Terminate, true } };
+            // TODO: need to terminate the BackGround process!
+            ValueSet valueSet = new ValueSet { { BackgroundProcessCommand.Terminate, true } };
             await App.Connection.SendMessageAsync(valueSet);
             IsChecking = false;
+        }
+
+        private async Task CheckRequirementRecursive(RequirementViewModel requirement)
+        {
+            ValueSet valueSet = new ValueSet { { BackgroundProcessCommand.RunChecks, _jsonSerializerService.Serialize(requirement) } };
+            requirement.Status = ResponseStatus.Processing;
+
+            var response = await App.Connection.SendMessageAsync(valueSet);
+            var passed = (response?.Message.Keys.Contains(requirement.Name) ?? false)
+                ? (bool)response?.Message[requirement.Name]
+                : false;
+
+            requirement.Status = passed ? ResponseStatus.Success : ResponseStatus.Failed;
+
+            _analyticsService.TrackEvent(
+                AnalyticsConfiguration.CheckCategory,
+                AnalyticsConfiguration.CheckRequirementAction,
+                requirement.Name,
+                passed ? 1 : 0);
+
+            requirement.Modules?.ToList().ForEach(async x => await CheckRequirementRecursive(x));
         }
 
         private bool CheckRequirementsCan()
