@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using Microsoft.HackChecklist.Models.Contracts;
 using Microsoft.HackChecklist.Models.Enums;
 
 namespace Microsoft.HackChecklist.Models
 {
-    public class Software 
+    public class Software : ISoftware
     {
         public string Name { get; set; }
 
@@ -25,5 +24,5 @@ namespace Microsoft.HackChecklist.Models
         public string Status { get; set; }
 
         public bool ActivateLoading { get; set; }
-    }            
+    }
 }
