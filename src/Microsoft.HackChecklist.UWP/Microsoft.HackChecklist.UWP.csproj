@@ -204,6 +204,32 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <ItemGroup Label="BackgroundProcess">
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'"
+      Include="..\..\bin\x86\Debug\BackgroundProcess.exe">
+      <Link>BackgroundProcess/BackgroundProcess.exe</Link>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Release|x86'"
+      Include="..\..\bin\x86\Release\BackgroundProcess.exe">
+      <Link>BackgroundProcess/BackgroundProcess.exe</Link>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'"
+      Include="..\..\bin\x64\Debug\BackgroundProcess.exe">
+      <Link>BackgroundProcess/BackgroundProcess.exe</Link>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Release|x64'"
+      Include="..\..\bin\x64\Release\BackgroundProcess.exe">
+      <Link>BackgroundProcess/BackgroundProcess.exe</Link>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

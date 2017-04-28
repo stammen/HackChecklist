@@ -118,7 +118,7 @@ namespace Microsoft.HackChecklist.BackgroundProcess
                 }
                 Console.WriteLine($"Responsing valueSet: {valueSet}");
                 args.Request.SendResponseAsync(valueSet).Completed += delegate { };
-                Console.WriteLine($"Responsed with {software?.Status}");
+                //Console.WriteLine($"Responsed with {software?.Status}");
             }
             else if (key == BackgroundProcessCommand.RunChecks)
             {

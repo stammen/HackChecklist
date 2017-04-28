@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HackChecklist.UWP", "src\Microsoft.HackChecklist.UWP\Microsoft.HackChecklist.UWP.csproj", "{21124035-298C-45D1-8BB3-CAE60DE65680}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5AC32AC8-7743-4AC7-B574-AFA1534FE351} = {5AC32AC8-7743-4AC7-B574-AFA1534FE351}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HackChecklist.Services", "src\Microsoft.HackChecklist.Services\Microsoft.HackChecklist.Services.csproj", "{F841BE3A-B482-4D9C-836E-28665CBFA8BC}"
 EndProject
