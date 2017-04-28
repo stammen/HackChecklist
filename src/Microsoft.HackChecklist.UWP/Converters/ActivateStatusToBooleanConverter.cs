@@ -4,17 +4,11 @@ using Microsoft.HackChecklist.Models.Enums;
 
 namespace Microsoft.HackChecklist.UWP.Converters
 {
-    public class StatusImageConverter : IValueConverter
+    public class ActivateStatusToBooleanConverter : IValueConverter
     {
-        private const string RootPath = "ms-appx:///Assets/";
-
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is ResponseStatus)
-            {
-                return $"{RootPath}{(ResponseStatus)value}.png";
-            }
-            return $"{RootPath}{ResponseStatus.None}.png";
+            return value is ResponseStatus && (ResponseStatus)value == ResponseStatus.Processing;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

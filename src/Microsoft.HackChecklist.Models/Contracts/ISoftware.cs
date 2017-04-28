@@ -12,7 +12,6 @@ namespace Microsoft.HackChecklist.Models.Contracts
         string InstallationRegistryExpectedValue { get; set; }
         bool IsOptional { get; set; }
         string InstallationNotes { get; set; }
-        string Status { get; set; }
-        bool ActivateLoading { get; set; }
+        ResponseStatus Status { get; set; }
     }
 }

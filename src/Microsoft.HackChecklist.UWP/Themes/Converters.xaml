@@ -5,5 +5,6 @@
 
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <converters:StatusImageConverter x:Key="StatusImageConverter"/>
+    <converters:ActivateStatusToBooleanConverter x:Key="ActivateStatusToBooleanConverter"/>
 
 </ResourceDictionary>

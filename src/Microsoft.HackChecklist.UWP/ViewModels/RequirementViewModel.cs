@@ -96,7 +96,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             }
         }
 
-        public string Status
+        public ResponseStatus Status 
         {
             get => _requirement.Status;
             set
@@ -106,23 +106,16 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             }
         }
 
-        public bool ActivateLoading
-        {
-            get => _requirement.ActivateLoading;
-            set
-            {
-                _requirement.ActivateLoading = value;
-                OnPropertyChanged(nameof(ActivateLoading));
-            }
-        }
-
         public ObservableCollection<Software> Modules { get; set; }
 
         public Requirement ModelObject
         {
             get
             {
-                _requirement.Modules = Modules.ToList();
+                if (Modules != null)
+                {
+                    _requirement.Modules = Modules.ToList();
+                }
                 return _requirement;
             }
             set
