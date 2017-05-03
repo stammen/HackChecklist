@@ -22,11 +22,13 @@ namespace Microsoft.HackChecklist.Models
 
         public CheckType CheckType { get; set; }
 
-        public string InstallationRegistryKey { get; set; }
+        public string RegistryKey { get; set; }
 
-        public string InstallationRegistryValue { get; set; }
+        public string RegistryValue { get; set; }
 
-        public string InstallationRegistryExpectedValue { get; set; }
+        public string RegistryExpectedValue { get; set; }
+
+        public string RegistryHive { get; set; }
 
         public bool IsOptional { get; set; }
 

@@ -3,93 +3,104 @@
     {
       "name": "Windows 10 Creators Update",
       "additionalInformation": "Build 15063 or later",
-      "checkType": "MinimumRegistryValueCheck",
-      "installationRegistryKey": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
-      "installationRegistryValue": "CurrentBuildNumber",
-      "installationRegistryExpectedValue": "15063",
+      "checkType": "MinimumRegistryValue",
+      "registryHive": "LocalMachine",
+      "registryKey": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
+      "registryValue": "CurrentBuildNumber",
+      "registryExpectedValue": "15063",
       "isOptional": "false",
       "installationNotes": "https://www.microsoft.com/en-us/software-download/windows10"
     },
     {
       "name": "Visual Studio 2017",
       "additionalInformation": "Community Edition or higher",
-      "checkType": "VisualStudioInstalledCheck",
+      "checkType": "VisualStudioInstalled",
       "isOptional": "false",
       "installationNotes": "https://www.visualstudio.com/vs/",
       "modules": [
         {
           "name": "Universal Windows Platform SDK",
           "additionalInformation": "Version 10.0.15063.0 or higher",
-          "checkType": "VisualStudioWorkloadInstalledCheck",
-          "installationRegistryKey": "Microsoft.VisualStudio.Workload.Universal",
+          "checkType": "MinimumVisualStudioWorkloadInstalled",
+          "registryKey": "Microsoft.VisualStudio.Workload.Universal",
+          "registryExpectedValue": "15.0.26403.0",
           "isOptional": "false",
           "installationNotes": "https://www.visualstudio.com/es/vs/visual-studio-workloads/"
         },
         {
           "name": ".NET Desktop Development",
-          "checkType": "VisualStudioWorkloadInstalledCheck",
-          "installationRegistryKey": "Microsoft.VisualStudio.Workload.ManagedDesktop",
+          "checkType": "VisualStudioWorkloadInstalled",
+          "registryKey": "Microsoft.VisualStudio.Workload.ManagedDesktop",
           "isOptional": "false",
           "installationNotes": "https://www.visualstudio.com/es/vs/visual-studio-workloads/"
         },
         {
           "name": "Xamarin with Android SDK, Java, and Google Android Emulator",
-          "checkType": "VisualStudioWorkloadInstalledCheck",
-          "installationRegistryKey": "Microsoft.VisualStudio.Workload.NetCrossPlat",
+          "checkType": "VisualStudioWorkloadInstalled",
+          "registryKey": "Microsoft.VisualStudio.Workload.NetCrossPlat",
           "isOptional": "false",
           "installationNotes": "https://www.visualstudio.com/es/vs/visual-studio-workloads/"
         },
         {
           "name": "C++ Desktop Development",
-          "checkType": "VisualStudioWorkloadInstalledCheck",
-          "installationRegistryKey": "Microsoft.VisualStudio.Workload.NativeDesktop",
+          "checkType": "VisualStudioWorkloadInstalled",
+          "registryKey": "Microsoft.VisualStudio.Workload.NativeDesktop",
           "isOptional": "true",
           "installationNotes": "https://www.visualstudio.com/es/vs/visual-studio-workloads/"
         }
       ]
     },
     {
-      "name": "Developer Mode Enabled",      
-      "checkType": "RegistryValueCheck",
-      "installationRegistryKey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AppModelUnlock",
-      "installationRegistryValue": "AllowAllTrustedApps",
-      "installationRegistryExpectedValue": "1",
+      "name": "Developer Mode Enabled",
+      "checkType": "RegistryValue",
+      "registryHive": "LocalMachine",
+      "registryKey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AppModelUnlock",
+      "registryValue": "AllowAllTrustedApps",
+      "registryExpectedValue": "1",
       "isOptional": "false",
       "installationNotes": "https://docs.microsoft.com/en-us/windows/uwp/get-started/enable-your-device-for-development"
     },
     {
       "name": "Unity",
       "additionalInformation": "Version 5.6 or higher",
-      "checkType": "RegistryValueCheck",
-      "installationRegistryKey": "Software\\Unity Technologies\\Installer",
-      "installationRegistryValue": "Software Installation Registry Value",
+      "checkType": "RegistryValue",
+      "registryHive": "CurrentUser",
+      "registryKey": "Software\\Unity Technologies\\Installer",
+      "registryValue": "Select_Unity",
+      "registryExpectedValue": "1",
       "isOptional": "true",
       "installationNotes": "https://store.unity.com/"
     },
     {
-      "name": "Azure SDK (latest)",
-      "additionalInformation": "Software more info",
-      "checkType": "IncludedInRegistryInstallationCheck",
-      "installationRegistryKey": "Software Installation Registry Key",
-      "installationRegistryValue": "Software Installation Registry Value",
+      "name": "Azure Libraries for .NET",
+      "additionalInformation": "Version 2.9 or higher",
+      "checkType": "IncludedInRegistry",
+      "registryHive": "LocalMachine",
+      "registryKey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+      "registryValue": "DisplayName",
+      "registryExpectedValue": "Azure Libraries for .NET",
       "isOptional": "false",
-      "installationNotes": "Software Installation Notes"
+      "installationNotes": "https://www.microsoft.com/en-us/download/details.aspx?id=51657"
     },
     {
-      "name": "Azure extension for Visual Studio",
+      "name": "Visual Studio 2015 Tools for Azure",
       "additionalInformation": "Software more info",
-      "checkType": "IncludedInRegistryInstallationCheck",
-      "installationRegistryKey": "Software Installation Registry Key",
-      "installationRegistryValue": "Software Installation Registry Value",
+      "checkType": "IncludedInRegistry",
+      "registryHive": "LocalMachine",
+      "registryKey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+      "registryValue": "DisplayName",
+      "registryExpectedValue": "Visual Studio 2015 Tools for Azure",
       "isOptional": "false",
-      "installationNotes": "Software Installation Notes"
+      "installationNotes": "https://azure.microsoft.com/en-us/tools/"
     },
     {
-      "name": "Azure CLI (2.0 cross plat)",
-      "additionalInformation": "Software more info",
-      "checkType": "IncludedInRegistryInstallationCheck",
-      "installationRegistryKey": "Software Installation Registry Key",
-      "installationRegistryValue": "Software Installation Registry Value",
+      "name": "Azure CLI 2.0",
+      "additionalInformation": "Version 2.0 or higher",
+      "checkType": "IncludedInRegistry",
+      "registryHive": "LocalMachine",
+      "registryKey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+      "registryValue": "DisplayName",
+      "registryExpectedValue": "Azure CLI 2.0",
       "isOptional": "false",
       "installationNotes": "https://docs.microsoft.com/en-us/cli/azure/install-azure-cli"
     }

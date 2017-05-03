@@ -31,10 +31,12 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
     public class MainViewModel : ViewModelBase
     {
         public const string ConfigurationFileName = "configuration";
+        public const string ConfigFileUrl = @"https://raw.githubusercontent.com/nmetulev/HackChecklist/migration/src/Microsoft.HackChecklist.UWP/configuration.json";
 
         private readonly IJsonSerializerService _jsonSerializerService;
         private readonly IAppDataService _appDataService;
         private readonly IAnalyticsService _analyticsService;
+        private readonly INetworkService _networkService;
 
         private readonly ResourceLoader _resourceLoader = new ResourceLoader();
 
@@ -43,11 +45,13 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
         private string _messageChecking;
         private string _messageChecked;
 
-        public MainViewModel(IJsonSerializerService jsonSerializerService, IAppDataService appDataService, IAnalyticsService analyticsService)
+        public MainViewModel(IJsonSerializerService jsonSerializerService, IAppDataService appDataService, IAnalyticsService analyticsService,
+            INetworkService networkService)
         {
             _jsonSerializerService = jsonSerializerService;
             _appDataService = appDataService;
             _analyticsService = analyticsService;
+            _networkService = networkService;
             Init();
         }
 
@@ -98,8 +102,18 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
 
         public async void Init()
         {
-            var strConfiguration = await _appDataService.GetDataFile(ConfigurationFileName);
-            Configuration configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
+            string strConfiguration;
+            try
+            {
+                strConfiguration = await _networkService.Get(ConfigFileUrl);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                strConfiguration = await _appDataService.GetDataFile(ConfigurationFileName);
+            }
+            
+            var configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
             CheckRequirementsAction();
             foreach (var requirement in configuration.Requirements)
             {

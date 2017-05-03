@@ -1,4 +1,4 @@
-﻿//*********************************************************
+//*********************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 // This code is licensed under the MIT License (MIT).
@@ -9,15 +9,12 @@
 //
 //*********************************************************
 
-namespace Microsoft.HackChecklist.Models.Enums
+using System.Threading.Tasks;
+
+namespace Microsoft.HackChecklist.Services.Contracts
 {
-    public enum CheckType
+    public interface INetworkService
     {
-        RegistryValue,
-        MinimumRegistryValue,
-        IncludedInRegistry,        
-        VisualStudioInstalled,
-        VisualStudioWorkloadInstalled,
-        MinimumVisualStudioWorkloadInstalled
+        Task<string> Get(string requestUrl);
     }
 }
