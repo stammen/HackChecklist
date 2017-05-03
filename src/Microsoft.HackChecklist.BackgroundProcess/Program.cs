@@ -5,6 +5,7 @@ using Microsoft.HackChecklist.Models.Enums;
 using Microsoft.HackChecklist.Services;
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Windows.ApplicationModel.AppService;
@@ -72,8 +73,8 @@ namespace Microsoft.HackChecklist.BackgroundProcess
             {
                 valueSet.Add(software.Name, CheckRequirement(software));
             }
-            Console.WriteLine($"Responsing valueSet: {valueSet}");
-            args.Request.SendResponseAsync(valueSet).Completed += delegate { };
+            Debug.WriteLine($"Responsing valueSet: {valueSet}");
+            await args.Request.SendResponseAsync(valueSet);
         }
 
         private static bool CheckRequirement(Software software)
