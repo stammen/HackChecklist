@@ -1,0 +1,58 @@
+﻿<!--
+//*********************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//********************************************************* 
+-->
+    
+<Page
+    x:Class="Microsoft.HackChecklist.UWP.View.MainView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" MaxHeight="670" MaxWidth="960">
+
+    <Grid Height="670" Width="960">
+        <StackPanel Margin="300,160,0,0" Width="350" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <TextBlock x:Uid="Welcome" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock x:Uid="ToolHelp" Style="{StaticResource SubTitleTextBlockStyle}"/>
+            <Button x:Uid="CheckNow" Style="{StaticResource CheckRegistryButtonStyle}" 
+                    Command="{Binding CheckRequirementsCommand}"/>
+            <TextBlock x:Uid="Terms" Style="{StaticResource TermsTextBlockStyle}"/>
+        </StackPanel>
+        <Image Source="ms-appx:///Assets/Buildings.png" VerticalAlignment="Bottom" Width="960" Stretch="Uniform"/>
+        <Image Source="ms-appx:///Assets/clouds.png" VerticalAlignment="Top" Width="960" Stretch="Uniform"/>
+
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="670" Width="960" Background="White"
+            Visibility="{Binding GoChecking,Converter={StaticResource BoolToVisibilityConverter}}" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <TextBlock Text="{Binding MessageChecking}" Style="{StaticResource TitleLoadingStyle}"/>
+                <TextBlock Text="{Binding MessageChecked}" Style="{StaticResource SubTitleLoadingStyle}"/>
+            </StackPanel>
+            <ListView Grid.Row="1" ItemTemplate="{StaticResource Software}" ItemContainerStyle="{StaticResource ListViewItemStyle}"
+                      ItemsSource="{Binding Requirements}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+            <Button Grid.Row="0" Grid.RowSpan="2" x:Uid="Restart" Style="{StaticResource RestartButtonStyle}"
+                    Command="{Binding CheckRequirementsCommand}"/>
+        </Grid>
+        <ProgressRing Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center"
+                Width="50" Height="50" x:Name="progressBar" />
+    </Grid>
+</Page>

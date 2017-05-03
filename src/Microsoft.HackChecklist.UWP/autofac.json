@@ -1,0 +1,26 @@
+﻿{
+  "components": [
+    {
+      "type": "Microsoft.HackChecklist.Services.JsonSerializerService, Microsoft.HackChecklist.Services",
+      "services": [
+        {
+          "type": "Microsoft.HackChecklist.Services.Contracts.IJsonSerializerService"
+        }
+      ],
+      "autoActivate": true,
+      "instanceScope": "per-dependency",
+      "ownership": "external"
+    },
+    {
+      "type": "Microsoft.HackChecklist.UWP.MainViewModel, Microsoft.HackChecklist.UWP",
+      "services": [
+        {
+          "type": "Microsoft.HackChecklist.UWP.Contracts.IMainViewModel"
+        }
+      ],
+      "autoActivate": true,
+      "instanceScope": "per-dependency",
+      "ownership": "external"
+    }
+  ]
+} 
