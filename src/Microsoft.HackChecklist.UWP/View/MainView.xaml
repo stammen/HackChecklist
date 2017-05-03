@@ -30,8 +30,7 @@
         <Image Source="ms-appx:///Assets/Buildings.png" VerticalAlignment="Bottom" Width="960" Stretch="Uniform"/>
         <Image Source="ms-appx:///Assets/clouds.png" VerticalAlignment="Top" Width="960" Stretch="Uniform"/>
 
-        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="670" Width="960" Background="White"
-            Visibility="{Binding GoChecking,Converter={StaticResource BoolToVisibilityConverter}}" >
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="670" Width="960" Background="White">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100"/>
                 <RowDefinition Height="*"/>

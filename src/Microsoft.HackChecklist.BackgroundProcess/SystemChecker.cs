@@ -28,8 +28,8 @@ namespace Microsoft.HackChecklist.BackgroundProcess
         private const string UninstallRegistrySubKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
         private const string UninstallRegistryKeyValue = "DisplayName";
 
-        private AppServiceConnection _connection;
-        private AutoResetEvent appServiceExit;
+        static AppServiceConnection _connection = null;
+        static AutoResetEvent _appServiceExit = null;
 
         public SystemChecker()
         {
@@ -38,20 +38,20 @@ namespace Microsoft.HackChecklist.BackgroundProcess
 
         public void Run()
         {
-            appServiceExit = new AutoResetEvent(false);
+            _appServiceExit = new AutoResetEvent(false);
             var appServiceThread = new Thread(ConnectionThread);
             appServiceThread.Start();
-            appServiceExit.WaitOne();
+            _appServiceExit.WaitOne();
         }
 
-        private void Connection_ServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)
+        private static void Connection_ServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)
         {
             //when the connection with the App Service is closed, we terminate the Win32 process
             Console.WriteLine($"Connection_ServiceClosed");
-            appServiceExit.Set();
+            _appServiceExit.Set();
         }
 
-        private async void ConnectionThread()
+        static async void ConnectionThread()
         {
             //we create a connection with the App Service defined by the UWP app
             _connection = new AppServiceConnection();
@@ -66,7 +66,7 @@ namespace Microsoft.HackChecklist.BackgroundProcess
             if (status != AppServiceConnectionStatus.Success)
             {
                 //if the connection fails, we terminate the Win32 process
-                appServiceExit.Set();
+                _appServiceExit.Set();
             }
             else
             {
@@ -78,7 +78,7 @@ namespace Microsoft.HackChecklist.BackgroundProcess
             }
         }
 
-        private void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        private static async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
             Console.WriteLine("RequestReceived");
 
@@ -123,9 +123,15 @@ namespace Microsoft.HackChecklist.BackgroundProcess
                 args.Request.SendResponseAsync(valueSet).Completed += delegate {
                 };
             }
+
+            //we send a message back to the UWP app to communicate that the operation has been completed with success
+            ValueSet set = new ValueSet();
+            set.Add("Status", "Success");
+
+            await args.Request.SendResponseAsync(set);
         }
 
-        private bool CheckRequirement(Software software)
+        private static bool CheckRequirement(Software software)
         {
             var checkResult = false;
             switch (software.CheckType)

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10" IgnorableNamespaces="uap mp rescap desktop">
-  <Identity Name="Microsoft.AppServiceBridge" Publisher="CN=dalestam" Version="1.0.9.0" />
+  <Identity Name="Microsoft.HackChecklist" Publisher="CN=dalestam" Version="1.0.9.0" />
   <mp:PhoneIdentity PhoneProductId="1aa93327-07b6-485f-bc70-70cbd5a9ca0a" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Hack Checklist</DisplayName>
@@ -24,7 +24,8 @@
         <uap:Extension Category="windows.appService">
           <uap:AppService Name="CommunicationService" />
         </uap:Extension>
-        <desktop:Extension Category="windows.fullTrustProcess" Executable="BackgroundProcess\BackgroundProcess.exe" />      </Extensions>
+        <desktop:Extension Category="windows.fullTrustProcess" Executable="BackgroundProcess\BackgroundProcess.exe" />
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>

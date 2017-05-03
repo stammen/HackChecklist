@@ -118,6 +118,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
 
             Message = "running";
 
+
             foreach (var requirement in Requirements)
             {
                 await CheckRequirementRecursive(requirement);
