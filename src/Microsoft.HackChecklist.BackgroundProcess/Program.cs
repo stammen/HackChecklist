@@ -20,7 +20,6 @@ namespace Microsoft.HackChecklist.BackgroundProcess
         public static void Main(string[] args)
         {
             new SystemChecker().Run();
-            Console.ReadKey();
         }
     }
 }

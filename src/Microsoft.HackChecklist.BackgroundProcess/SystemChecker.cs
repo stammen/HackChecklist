@@ -28,72 +28,60 @@ namespace Microsoft.HackChecklist.BackgroundProcess
         private const string UninstallRegistrySubKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
         private const string UninstallRegistryKeyValue = "DisplayName";
 
-        private readonly AppServiceConnection _connection;
-        AutoResetEvent appServiceExit;
+        private AppServiceConnection _connection;
+        private AutoResetEvent appServiceExit;
 
         public SystemChecker()
         {
-            _connection = new AppServiceConnection();
-            appServiceExit = new AutoResetEvent(false);
-            _connection.AppServiceName = "CommunicationService";
-            _connection.PackageFamilyName = Windows.ApplicationModel.Package.Current.Id.FamilyName;
-            _connection.RequestReceived += RequestReceived;
-            _connection.ServiceClosed += Connection_ServiceClosed;
+
         }
 
         public void Run()
         {
+            appServiceExit = new AutoResetEvent(false);
             var appServiceThread = new Thread(ConnectionThread);
             appServiceThread.Start();
+            appServiceExit.WaitOne();
+        }
+
+        private void Connection_ServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)
+        {
+            //when the connection with the App Service is closed, we terminate the Win32 process
+            Console.WriteLine($"Connection_ServiceClosed");
+            appServiceExit.Set();
         }
 
         private async void ConnectionThread()
         {
-            try
+            //we create a connection with the App Service defined by the UWP app
+            _connection = new AppServiceConnection();
+            _connection.AppServiceName = "CommunicationService";
+            _connection.PackageFamilyName = Windows.ApplicationModel.Package.Current.Id.FamilyName;
+            _connection.RequestReceived += Connection_RequestReceived;
+            _connection.ServiceClosed += Connection_ServiceClosed;
+
+            //we open the connection
+            AppServiceConnectionStatus status = await _connection.OpenAsync();
+
+            if (status != AppServiceConnectionStatus.Success)
             {
-                Console.WriteLine("I am the thread");
-                var status = await _connection.OpenAsync();
-                Console.WriteLine($"I am listening with status: {status}");
-                switch (status)
-                {
-                    case AppServiceConnectionStatus.Success:
-                        Console.WriteLine("Connection established - waiting for requests");
-                        //if the connection is successful, we communicate to the UWP app that the channel has been established
-                        ValueSet initialStatus = new ValueSet();
-                        initialStatus.Add("Status", "Ready");
-                        await _connection.SendMessageAsync(initialStatus);
-                        break;
-                    case AppServiceConnectionStatus.AppNotInstalled:
-                        Console.WriteLine("The app AppServicesProvider is not installed.");
-                        return;
-                    case AppServiceConnectionStatus.AppUnavailable:
-                        Console.WriteLine("The app AppServicesProvider is not available.");
-                        return;
-                    case AppServiceConnectionStatus.AppServiceUnavailable:
-                        Console.WriteLine($"The app AppServicesProvider is installed but it does not provide the app service {_connection.AppServiceName}.");
-                        return;
-                    case AppServiceConnectionStatus.Unknown:
-                        Console.WriteLine("An unkown error occurred while we were trying to open an AppServiceConnection.");
-                        return;
-                    case AppServiceConnectionStatus.RemoteSystemUnavailable:
-                        break;
-                    case AppServiceConnectionStatus.RemoteSystemNotSupportedByApp:
-                        break;
-                    case AppServiceConnectionStatus.NotAuthorized:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                //if the connection fails, we terminate the Win32 process
+                appServiceExit.Set();
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e);
-                throw;
+                Console.WriteLine("Connection established - waiting for requests");
+                //if the connection is successful, we communicate to the UWP app that the channel has been established
+                ValueSet initialStatus = new ValueSet();
+                initialStatus.Add("Status", "Ready");
+                await _connection.SendMessageAsync(initialStatus);
             }
         }
 
-        private void RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        private void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
+            Console.WriteLine("RequestReceived");
+
             var key = args.Request.Message.First().Key;
             Console.WriteLine($"I have something {key} - {args.Request.Message.First().Value}");
             Requirement value;

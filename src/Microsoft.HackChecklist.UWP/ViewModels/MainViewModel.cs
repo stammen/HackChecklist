@@ -100,7 +100,6 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
         {
             var strConfiguration = await _appDataService.GetDataFile(ConfigurationFileName);
             Configuration configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
-            CheckRequirementsAction();
             foreach (var requirement in configuration.Requirements)
             {
                 Requirements.Add(new RequirementViewModel(requirement));                
@@ -129,9 +128,6 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
                 ? _resourceLoader.GetString("SubTitleCheckFile")
                 : _resourceLoader.GetString("SubTitleCheckSucces");
 
-            // TODO: need to terminate the BackGround process!
-            ValueSet valueSet = new ValueSet { { BackgroundProcessCommand.Terminate, true } };
-            await App.Connection.SendMessageAsync(valueSet);
             IsChecking = false;
         }
 

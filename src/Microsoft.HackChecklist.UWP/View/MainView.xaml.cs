@@ -14,6 +14,7 @@ using Microsoft.HackChecklist.UWP.ViewModels;
 
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.System.Profile;
 using Windows.UI.Core;
@@ -42,6 +43,8 @@ namespace Microsoft.HackChecklist.UWP.View
                 try
                 {
                     await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                    await Task.Delay(1000); // quick fix, need to make it better
+
                 }
                 catch (Exception exception)
                 {

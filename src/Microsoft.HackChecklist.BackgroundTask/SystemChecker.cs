@@ -48,13 +48,16 @@ namespace Microsoft.HackChecklist.BackgroundProcess
         {
             try
             {
-                Console.WriteLine("I am the thread");
+                //Console.WriteLine("I am the thread");
                 var status = await _connection.OpenAsync();
-                Console.WriteLine($"I am listening with status: {status}");
+                //Console.WriteLine($"I am listening with status: {status}");
                 switch (status)
                 {
                     case AppServiceConnectionStatus.Success:
-                        Console.WriteLine("Connection established - waiting for requests");
+                        //Console.WriteLine("Connection established - waiting for requests");
+                        ValueSet initialStatus = new ValueSet();
+                        initialStatus.Add("Status", "Ready");
+                        await _connection.SendMessageAsync(initialStatus);
                         break;
                     case AppServiceConnectionStatus.AppNotInstalled:
                         Console.WriteLine("The app AppServicesProvider is not installed.");

@@ -18,7 +18,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>Microsoft.HackChecklist.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>AF58C037D6A1142C136D06DF25449A031589D2D0</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>36C1BB10EBA48949067385AA4CA7E02D70EF6CFA</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -206,26 +206,22 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <ItemGroup Label="BackgroundProcess">
-    <Content Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'"
-      Include="..\..\bin\x86\Debug\BackgroundProcess.exe">
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'" Include="..\..\bin\x86\Debug\BackgroundProcess.exe">
       <Link>BackgroundProcess/BackgroundProcess.exe</Link>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Condition="'$(Configuration)|$(Platform)' == 'Release|x86'"
-      Include="..\..\bin\x86\Release\BackgroundProcess.exe">
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Release|x86'" Include="..\..\bin\x86\Release\BackgroundProcess.exe">
       <Link>BackgroundProcess/BackgroundProcess.exe</Link>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'"
-      Include="..\..\bin\x64\Debug\BackgroundProcess.exe">
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Include="..\..\bin\x64\Debug\BackgroundProcess.exe">
       <Link>BackgroundProcess/BackgroundProcess.exe</Link>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Condition="'$(Configuration)|$(Platform)' == 'Release|x64'"
-      Include="..\..\bin\x64\Release\BackgroundProcess.exe">
+    <Content Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Include="..\..\bin\x64\Release\BackgroundProcess.exe">
       <Link>BackgroundProcess/BackgroundProcess.exe</Link>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
