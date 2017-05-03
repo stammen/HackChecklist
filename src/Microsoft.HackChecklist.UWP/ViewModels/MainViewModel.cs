@@ -112,7 +112,7 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
                 Console.WriteLine(e);
                 strConfiguration = await _appDataService.GetDataFile(ConfigurationFileName);
             }
-            
+
             var configuration = _jsonSerializerService.Deserialize<Configuration>(strConfiguration);
             CheckRequirementsAction();
             foreach (var requirement in configuration.Requirements)

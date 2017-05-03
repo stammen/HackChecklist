@@ -58,36 +58,6 @@ namespace Microsoft.HackChecklist.UWP.ViewModels
             }
         }
 
-        public string InstallationRegistryKey
-        {
-            get => _requirement.InstallationRegistryKey;
-            set
-            {
-                _requirement.InstallationRegistryKey = value;
-                OnPropertyChanged(nameof(InstallationRegistryKey));
-            }
-        }
-
-        public string InstallationRegistryValue
-        {
-            get => _requirement.InstallationRegistryValue;
-            set
-            {
-                _requirement.InstallationRegistryValue = value;
-                OnPropertyChanged(nameof(InstallationRegistryValue));
-            }
-        }
-
-        public string InstallationRegistryExpectedValue
-        {
-            get => _requirement.InstallationRegistryExpectedValue;
-            set
-            {
-                _requirement.InstallationRegistryExpectedValue = value;
-                OnPropertyChanged(nameof(InstallationRegistryExpectedValue));
-            }
-        }
-
         public bool IsOptional
         {
             get => _requirement.IsOptional;
